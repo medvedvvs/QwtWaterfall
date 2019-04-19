@@ -9,7 +9,7 @@ faster (compared to existing implementations over QwtSpectr....etc).
 Based on pure Qt's Qimage. WF canvas is placed over the QwtPlot->canvas().
 
 Options
-* multiple layers support; each hold Qimage as a canvas
+* multiple layers support; each holding Qimage as a canvas
 * adding data from top, bottom, left and right.
 * control widget and colors/colormap opacity (alpha values)
 * adding data of WxH size 2D blocks, not equal to image width and height
@@ -22,6 +22,7 @@ example).
 
 To compile, just edit project.pro and check the way to qwt config file *qwt.prf*,
 then **qmake project.pro** and **make**.
+
 
 
 Qt/qwt versions tested: 5.12.* vs 6.1.4
