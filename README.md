@@ -1,4 +1,4 @@
-# *"Dirty"* implementation of Waterfall view widget for Qwt
+# *"Dirty"* implementation of Waterfall view widget for Qwt and Qt
 
 ![WF QwtPlot screen](/WF.png)
 
