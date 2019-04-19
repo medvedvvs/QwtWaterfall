@@ -22,7 +22,7 @@ Implemented features
 *Obeys (+/-)* Qt/Qwt styling of background widgets (rounded corners, for
 example).
 
-To compile, just edit project.pro and check the way to qwt config file *qwt.prf*,
+To compile, just edit project.pro and check the path to qwt config file *qwt.prf*,
 then 
  
  **qmake project.pro**
