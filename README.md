@@ -18,7 +18,7 @@ Implemented features
 * adding data of WxH size 2D blocks [not equal to image W & H]
 * fix WF layer in any position
 * fix layer vertical or horizontal scale (noscaleX, noscaleY in the layer structure)
-* attach (or not) layer to axes (scales) from different QwtPlot widgets
+* attach (or not) layer to axes (scales) from different QwtPlot widgets (see example)
 * only RGB colorspace is implemented for now
 * Obeys (+/-) Qt/Qwt styling of background widgets (rounded corners, for example).
 
