@@ -27,6 +27,7 @@ bool over = false;
 			hei++;
 			if(hei > 100) hei = 0;
 			if(wf) {
+			if(layer == -1) {
 				// layer 0
 				if(nn < 500)
 				wf->appendT(0, data, 1000, 10);
@@ -50,7 +51,12 @@ bool over = false;
 					}
 				
 				}
-				
+			} else {
+				if(nn < 500)
+					wf->appendT(layer, data, 1000, 10);
+					else
+					wf->appendB(layer, data, 1000, 10);
+				}
 			}
 //			}
 		//msleep(10);

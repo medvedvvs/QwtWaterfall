@@ -14,12 +14,17 @@
 #include <qwt_scale_widget.h>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_layout.h>
+
 #include <QReadWriteLock>
-/*
+
+
+//#define WF_DEBUG_EVENTS
+
+#ifdef WF_DEBUG_EVENTS
 #include <QEvent>
 #include <QMetaEnum>
 #include <QDebug>   
-*/
+#endif
 
 #include "qwt_plot_waterfall.h"
 
@@ -35,17 +40,13 @@ QwtPlotWaterfall::QwtPlotWaterfall(QWidget* parent /*= 0*/)
 	rw_lock = new QReadWriteLock(QReadWriteLock::Recursive);
 }
 
-bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval,  int Xa, int Ya, QImage::Format fm, QColor fil, qreal opacity )
+bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval,  QImage::Format fm, QColor fil, qreal opacity )
 {
 	QwtWfLayer_t *la = new QwtWfLayer_t;
-	la->w = width_;
-	la->h = height_;
 //	la->image = QImage(width_, height_, QImage::Format_ARGB32);
 	la->image = QImage(width_, height_, fm);
-	if(Xa >= QwtPlot::axisCnt || Xa < 0) Xa = -1;
-	if(Ya >= QwtPlot::axisCnt || Ya < 0) Ya = -1;
-	la->Xaxis = Xa;
-	la->Yaxis = Ya;
+	la->Xscale = NULL;
+	la->Yscale = NULL;
 	la->opacity = opacity;
 	la->range = QwtInterval(minval, maxval);
 	la->colorMap = colorMap;
@@ -58,26 +59,19 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	la->rect.setRect(0, 0, width(), height() );	// initial size
 	la->noscaleX = false;
 	la->noscaleY = false;
+	la->attach(this);
 	
-	if(Xa > 0)
-		axis_used[Xa] = true;
-	if(Ya > 0)
-		axis_used[Ya] = true;
 	layers.append(la);
 return true;
 }
 
-bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range_,  int Xa, int Ya, QImage::Format fm, QColor fil, qreal opacity )
+bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range_,  QImage::Format fm, QColor fil, qreal opacity )
 {
 	QwtWfLayer_t *la = new QwtWfLayer_t;
-	la->w = width_;
-	la->h = height_;
 //	la->image = QImage(width_, height_, QImage::Format_ARGB32);
 	la->image = QImage(width_, height_, fm);
-	if(Xa >= QwtPlot::axisCnt || Xa < 0) Xa = -1;
-	if(Ya >= QwtPlot::axisCnt || Ya < 0) Ya = -1;
-	la->Xaxis = Xa;
-	la->Yaxis = Ya;
+	la->Xscale = NULL;
+	la->Yscale = NULL;
 	la->opacity = opacity;
 	la->range = range_;
 	la->colorMap = colorMap;
@@ -90,25 +84,168 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	la->rect.setRect(0, 0, width(), height() );	// initial size
 	la->noscaleX = false;
 	la->noscaleY = false;
+	la->attach(this);
 	
-	if(Xa > 0)
-		axis_used[Xa] = true;
-	if(Ya > 0)
-		axis_used[Ya] = true;
 	layers.append(la);
 return true;
 }
 
 void QwtPlotWaterfall::deleteLayer( qint32 l ) {
-
 rw_lock->lockForWrite();
-//printf("Not implemented yet\n"); return;
 	if(l >= 0 && l < layers.count())
 		delete layers.takeAt(l);
 rw_lock->unlock();
 		
 }
 
+void QwtPlotWaterfall::attachAxis(qint32 l,  qint32 axid, QwtPlot *p){
+if(l < layers.count())
+	layers[l]->attachAxis(axid, p);
+
+}
+
+void QwtWfLayer_t::attach(QWidget *wd){
+	myparent = wd;
+}
+
+void QwtWfLayer_t::attachAxis(qint32 axid, QwtPlot  *p){
+	if(axid == QwtPlot::xBottom || axid == QwtPlot::xTop) {
+	if(plot_x == NULL) {
+		if(p != NULL) {
+			Xscale = p->axisWidget( axid );
+			x_id = axid;
+			plot_x = p;
+			}
+		if(Xscale != NULL) {
+			connect( p->axisWidget( axid ), SIGNAL( scaleDivChanged() ), SLOT(xplotscaleDivChanged() ) );
+			}
+		}
+	} else
+	if(axid == QwtPlot::yLeft || axid == QwtPlot::yRight) {
+	if(plot_y == NULL) {
+		if(p != NULL) {
+			Yscale = p->axisWidget( axid );
+			y_id = axid;
+			plot_y = p;
+			}
+		if(Yscale != NULL) {
+			connect( p->axisWidget( axid ), SIGNAL( scaleDivChanged() ), SLOT( yplotscaleDivChanged() ) );
+			}
+		}
+	}
+
+}
+
+//vvs: check this:
+void QwtWfLayer_t::detatchAxis(bool x, bool y){
+	if(x && Xscale != NULL) {
+		//vvs: check this:
+		disconnect( Xscale, SIGNAL( scaleDivChanged() ), this, SLOT( xplotscaleDivChanged() ) );
+		Xscale = NULL;
+		x_id = -1;
+		}
+	if(y && Yscale != NULL) {
+		//vvs: check this:
+		disconnect( Yscale, SIGNAL( scaleDivChanged() ), this, SLOT( yplotscaleDivChanged() ) );
+		Yscale = NULL;
+		y_id = -1;
+		}
+
+}
+
+void QwtWfLayer_t::xplotscaleDivChanged() {
+	plotscaleDivChanged();
+}
+
+void QwtWfLayer_t::yplotscaleDivChanged() {
+	plotscaleDivChanged();
+}
+
+
+void QwtPlotWaterfall::lockForRead(){
+	rw_lock->lockForRead();
+	}
+	
+void QwtPlotWaterfall::unlockForRead(){
+	rw_lock->unlock();
+	}
+
+void QwtWfLayer_t::plotscaleDivChanged()
+{
+qint32	w, h, x , y, wi, he;
+qreal 	scx, scy;
+QwtScaleMap mx, my;
+QwtPlotWaterfall *p = reinterpret_cast<QwtPlotWaterfall *>(myparent);
+
+if(p && p->is_orig_set()) {
+	p->lockForRead();
+	wi = p->width();
+	he = p->height();
+	scx = (qreal)wi / (qreal)p->get_orig_w();
+	scy = (qreal)he / (qreal)p->get_orig_h();
+
+	if(Xscale == NULL) {
+		mx.setPaintInterval(minx, minx + image.width());
+		mx.setScaleInterval(minx, maxx);
+		} else {
+		mx = plot_x->canvasMap(x_id);
+		}
+		
+	 if(Yscale == NULL ){
+	 	my.setPaintInterval(miny, miny + image.height());
+		my.setScaleInterval(miny, maxy);
+	 	} else {
+	 	my = plot_y->canvasMap(y_id);
+	 	}
+
+	QRectF ff(minx, maxx,  fabs(maxx - minx), fabs((maxy - miny)));
+//	printf("FF: %f %f %f %f | %f %f %f %f \n", mx.p1(), mx.p2(), mx.s1(), mx.s2(), my.p1(), my.p2(), my.s1(), my.s2());
+	QRectF f = QwtScaleMap::transform (mx, my, ff);
+
+	if(Xscale == NULL) {
+		w = fabs(maxx - minx);
+		x = minx;
+		if(!noscaleX) {
+			w *= scx;
+			x *= scx;
+			}
+			
+		} else {
+		w = qRound(f.width());
+		x = qRound(f.left());
+		}
+
+	if(Yscale == NULL) {
+		if(!noscaleY) {
+			h = fabs(maxy - miny) * scy;
+			y = he - miny * scy -  h;
+			} else {
+			h = fabs(maxy - miny);
+			y = he - miny -  h;
+			}
+		} else {
+		h = qRound(f.height());
+		y = qRound(f.bottom());
+		}
+	rect.setRect(x, y, w, h);
+	p->unlockForRead();
+	}
+
+//	QwtPlotCanvas *canva = reinterpret_cast<QwtPlotCanvas *>( plott->canvas());
+//	QRect rr = canva->rect();
+//	rr.adjust(canva->frameWidth(), canva->frameWidth(), -canva->frameWidth(), -canva->frameWidth());
+//	borderClip = canva->borderPath( rr);
+
+//	update();
+p->Update();
+}
+
+
+
+void QwtPlotWaterfall::detatchAxis(qint32 l,  bool X,  bool Y){
+if(l < layers.count())
+	layers[l]->detatchAxis(X, Y);
+}
 
 
 void QwtPlotWaterfall::attach( QwtPlot *plot_ ) {
@@ -116,15 +253,11 @@ void QwtPlotWaterfall::attach( QwtPlot *plot_ ) {
 if(plot_) {
 	plott = plot_;
 	plott->canvas()->installEventFilter( this );
-	for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ ) {
-		if(axis_used[axis])
-			connect( plott->axisWidget( axis ), SIGNAL( scaleDivChanged() ), SLOT( plotscaleDivChanged() ) );
-		}
 	}
 
 }
 
-/*
+#ifdef WF_DEBUG_EVENTS
 /// Gives human-readable event type information.
 QDebug operator<<(QDebug str, const QEvent * ev) {
    static int eventEnumIndex = QEvent::staticMetaObject
@@ -139,98 +272,32 @@ QDebug operator<<(QDebug str, const QEvent * ev) {
    }
    return str.maybeSpace();
 }
-*/
+#endif
+
+
 bool QwtPlotWaterfall::eventFilter( QObject *object, QEvent *e )
 {
 
-    if ( e->type() == QEvent::Resize )
-    {
-        if ( object == plott->canvas() )
-        {
-	// emit resizeEvent() via resize()
-	resize(plott->canvas()->width(), plott->canvas()->height());
-        }
-    }
+	if ( e->type() == QEvent::Resize )
+	{
+		if ( object == plott->canvas() )
+		{
+		// emit resizeEvent() via resize()
+		resize(plott->canvas()->width(), plott->canvas()->height());
+		}
+	}
 
-//if(e->type() != QEvent::Paint) qDebug() << "handling an event" << e;
+	#ifdef WF_DEBUG_EVENTS
+	if(e->type() != QEvent::Paint) qDebug() << "WF event" << e;
+	#endif
+
 return QWidget::eventFilter( object, e );
 }
 
 
-void QwtPlotWaterfall::plotscaleDivChanged()
-{
-QwtWfLayer_t *la;
-qint32	w, h, x , y;
-qreal 	scx, scy;
-QwtScaleMap mx, my;
 
-if(orig_set) {
-
-	scx = (qreal)width() / (qreal)orig_w;
-	scy = (qreal)height() / (qreal)orig_h;
-
-rw_lock->lockForRead();
-//for(int i=0; i < layers.count(); i++){
-for ( QList<QwtWfLayer_t*>::iterator it = layers.begin();
-	it != layers.end(); ++it)
-	{
-//	la = layers[i];
- 	la = *it;
-
-	
-	if(la->Xaxis < 0) {
-		mx.setPaintInterval(la->minx, la->minx + la->w);
-		mx.setScaleInterval(la->minx, la->maxx);
-		} else
-		mx = plott->canvasMap(la->Xaxis);
-		
-	 if(la->Yaxis < 0 ){
-	 	my.setPaintInterval(la->miny, la->miny + la->h);
-		my.setScaleInterval(la->miny, la->maxy);
-	 	} else
-	 	my = plott->canvasMap(la->Yaxis);
-	
-	QRectF ff(la->minx, la->maxx,  fabs(la->maxx - la->minx), fabs((la->maxy - la->miny)));
-//	printf("FF: %f %f %f %f | %f %f %f %f \n", mx.p1(), mx.p2(), mx.s1(), mx.s2(), my.p1(), my.p2(), my.s1(), my.s2());
-	QRectF f = QwtScaleMap::transform (mx, my, ff);
-
-	if(la->Xaxis < 0) {
-		w = fabs(la->maxx - la->minx);
-		x = la->minx;
-		if(!la->noscaleX) {
-			w *= scx;
-			x *= scx;
-			}
-			
-		} else {
-		w = qRound(f.width());
-		x = qRound(f.left());
-		}
-
-	if(la->Yaxis < 0) {
-		if(!la->noscaleX) {
-			h = fabs(la->maxy - la->miny) * scy;
-			y = height() - la->miny * scy -  h;
-			} else {
-			h = fabs(la->maxy - la->miny);
-			y = height() - la->miny -  h;
-			}
-		} else {
-		h = qRound(f.height());
-		y = qRound(f.bottom());
-		}
-	la->rect.setRect(x, y, w, h);
-	}
-	rw_lock->unlock();
-	}
-
-	QwtPlotCanvas *canva = reinterpret_cast<QwtPlotCanvas *>( plott->canvas());
-	QRect rr = canva->rect();
-	rr.adjust(canva->frameWidth(), canva->frameWidth(), -canva->frameWidth(), -canva->frameWidth());
-	borderClip = canva->borderPath( rr);
-
-//	update();
-plott->canvas()->update();
+void QwtPlotWaterfall::Update(){
+	plott->canvas()->update();
 }
 
 
@@ -240,40 +307,38 @@ QwtWfLayer_t *la;
 qint32	w, h, x , y;
 qreal 	scx, scy;
 QwtScaleMap mx, my;
-//printf("Resize called\n");
+
 	if(!orig_set) {
-		orig_set = true;
 		orig_w = width();
 		orig_h = height();
+		orig_set = true;
                 }
 	scx = (qreal)width() / (qreal)orig_w;
 	scy = (qreal)height() / (qreal)orig_h;
 
 rw_lock->lockForRead();
-//for(int i=0; i < layers.count(); i++){
-//	la = layers[i];
-for ( QList<QwtWfLayer_t*>::iterator it = layers.begin();
-	it != layers.end(); ++it)
+
+for ( QList<QwtWfLayer_t*>::iterator it = layers.begin(); it != layers.end(); ++it)
 	{
 	la = *it;
 	
-	if(la->Xaxis < 0) {
-		mx.setPaintInterval(la->minx, la->minx + la->w);
+	if(la->Xscale == NULL) {
+		mx.setPaintInterval(la->minx, la->minx + la->image.width());
 		mx.setScaleInterval(la->minx, la->maxx);
 		} else
-		mx = plott->canvasMap(la->Xaxis);
+		mx = plott->canvasMap(la->get_x_id());
 		
-	 if(la->Yaxis < 0 ){
-	 	my.setPaintInterval(la->miny, la->miny + la->h);
+	 if(la->Yscale == NULL ){
+	 	my.setPaintInterval(la->miny, la->miny + la->image.height());
 		my.setScaleInterval(la->miny, la->maxy);
 	 	} else
-	 	my = plott->canvasMap(la->Yaxis);
+	 	my = plott->canvasMap(la->get_y_id());
 	
 	QRectF ff(la->minx, la->maxx,  fabs(la->maxx - la->minx), fabs((la->maxy - la->miny)));
 //	printf("FF: %f %f %f %f | %f %f %f %f \n", mx.p1(), mx.p2(), mx.s1(), mx.s2(), my.p1(), my.p2(), my.s1(), my.s2());
 	QRectF f = QwtScaleMap::transform (mx, my, ff);
 
-	if(la->Xaxis < 0) {
+	if(la->Xscale == NULL) {
 		w = fabs(la->maxx - la->minx);
 		x = la->minx;
 		if(!la->noscaleX) {
@@ -286,7 +351,7 @@ for ( QList<QwtWfLayer_t*>::iterator it = layers.begin();
 		x = qRound(f.left());
 		}
 
-	if(la->Yaxis < 0) {
+	if(la->Yscale == NULL) {
 		if(!la->noscaleX) {
 			h = fabs(la->maxy - la->miny) * scy;
 			y = height() - la->miny * scy -  h;
@@ -319,7 +384,8 @@ for ( QList<QwtWfLayer_t*>::iterator it = layers.begin();
 void QwtPlotWaterfall::paintEvent(QPaintEvent *event)
 {
 QwtWfLayer_t *la;
-static int cnt = 0;
+
+//static int cnt = 0;
 //	QPainter painter(this);
 //	printf("Paint %d\n", cnt); cnt++;
 	painter.begin(this);
@@ -344,7 +410,7 @@ rw_lock->unlock();
 }
 
 void QwtPlotWaterfall::replot(){
-printf("Replot called\n");
+//printf("Replot called\n");
 //	update();
 	repaint();
 }
@@ -383,7 +449,7 @@ int	y = h;
 rw_lock->lockForRead();
 if(l < layers.count()) {
 	la = layers[l];
-	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	uchar *data_ = la->image.bits();
 	memmove(data_, data_ + la->image.bytesPerLine() * h, la->image.sizeInBytes() - la->image.bytesPerLine() * h);
 	while(y >= 1) {
@@ -408,7 +474,8 @@ int	y = h;
 rw_lock->lockForRead();
 if(l < layers.count()) {
 	la = layers[l];
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	uchar *data_ = la->image.bits();
 	memmove(data_, data_ + la->image.bytesPerLine() * h, la->image.sizeInBytes() - la->image.bytesPerLine() * h);
 	while(y >= 1) {
@@ -434,7 +501,8 @@ int	y = 0;
 rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	uchar *data_ = la->image.bits();
 	memmove(data_ + la->image.bytesPerLine() * h, data_, la->image.sizeInBytes() - la->image.bytesPerLine() * h);
 	while(y < h) {
@@ -458,7 +526,8 @@ int	y = 0;
 rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	uchar *data_ = la->image.bits();
 	memmove(data_ + la->image.bytesPerLine() * h, data_, la->image.sizeInBytes() - la->image.bytesPerLine() * h);
 	while(y < h) {
@@ -486,7 +555,8 @@ rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
 	bpp = la->image.depth() / 8;
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	for(int i=0; i < h; i++) {
 		uchar *line = la->image.scanLine(i);
 		memmove(line + w * bpp, line, la->image.bytesPerLine() - w*bpp);
@@ -512,7 +582,8 @@ rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
 	bpp = la->image.depth() / 8;
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	for(int i=0; i < h; i++) {
 		uchar *line = la->image.scanLine(i);
 		memmove(line + w * bpp, line, la->image.bytesPerLine() - w*bpp);
@@ -538,7 +609,8 @@ rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
 	bpp = la->image.depth() / 8;
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	for(int i=0; i < h; i++) {
 		uchar *line = la->image.scanLine(i);
 		memmove(line, line + w*bpp, la->image.bytesPerLine() - w*bpp);
@@ -564,7 +636,8 @@ rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
 	bpp = la->image.depth() / 8;
-	if(la->w >= w && la->h >= h) {
+//	if(la->w >= w && la->h >= h) {
+	if(la->image.width() >= w && la->image.height() >= h) {
 	for(int i=0; i < h; i++) {
 		uchar *line = la->image.scanLine(i);
 		memmove(line, line + w*bpp, la->image.bytesPerLine() - w*bpp);

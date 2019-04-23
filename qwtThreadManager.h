@@ -16,7 +16,7 @@ public:
 	void quit();
 	void stopAndClear();
 	void setWf(QwtPlotWaterfall *wf_, int l) {wf = wf_;  layer = l;};
-
+	
 protected:
 	void run();
 

@@ -52,15 +52,23 @@ Plot::Plot( QWidget *parent ):
 
 	m_content = new QwtPlotWaterfall(canvas);
 //	m_content->addLayer(1000, 1000, 100, 100, 150, 150, 0, 100,  xBottom, yLeft, QImage::Format_ARGB32, QColor(0x66, 0x66, 0xAF, 10), 1.0 );
-	m_content->addLayer(1000, 1000, 10, 10, 150, 150, 0, 100,  -1, yLeft, QImage::Format_ARGB32, QColor(0x66, 0xF6, 0xAF, 50), 1.0 );
-	m_content->addLayer(1000, 1000, 100, 100, 150, 150, 0, 100,  xBottom, yLeft, QImage::Format_ARGB32, QColor(0xAF, 0x66, 0x96, 20), 0.6 );
-	m_content->addLayer(1000, 1000, 110, 110, 200, 200, 0, 100,  xBottom, yLeft, QImage::Format_ARGB32, QColor(0xA6, 0x66, 0xAF, 45), 1.0 );
+	m_content->addLayer(1000, 1000, 10, 10, 150, 150, 0, 100, QImage::Format_ARGB32, QColor(0x66, 0xF6, 0xAF, 50), 1.0 );
+	m_content->addLayer(1000, 1000, 100, 100, 150, 150, 0, 100, QImage::Format_ARGB32, QColor(0xAF, 0x66, 0x96, 20), 0.6 );
+	m_content->addLayer(1000, 1000, 110, 110, 200, 200, 0, 100,  QImage::Format_ARGB32, QColor(0xA6, 0x66, 0xAF, 45), 1.0 );
+
+
 	m_content->layers[0]->noscaleX = true;
 //	m_content->layers[0]->noscaleY = true;
 	for(int i=0; i < m_content->layers.count(); i++){
 		m_content->setColorMap(i, new ColorMap());
 		}
 	m_content->attach(this);
+
+	m_content->layers[0]->attachAxis(yLeft, this);
+	m_content->layers[1]->attachAxis(xBottom, this);
+	m_content->layers[1]->attachAxis(yLeft, this);
+	m_content->layers[2]->attachAxis(xBottom, this);
+	m_content->layers[2]->attachAxis(yLeft, this);
 
 
 
@@ -122,13 +130,19 @@ Plot::Plot( QWidget *parent ):
 
 	QwtPlotMagnifier *magnifier = new QwtPlotMagnifier( canvas );
 	magnifier->setAxisEnabled( QwtPlot::yRight, false );
-	
+
+
+	// single thread, 3 layers
+	// set l to -1 to enable 3 layers in 1 thread
+	m_loadThread[0].stopAndClear();
+	m_loadThread[0].setWf(m_content, -1);
+	m_loadThread[0].start();
+/*	
+	// multithreaded: works (tested)
 	m_loadThread[0].stopAndClear();
 	m_loadThread[0].setWf(m_content, 0);
 	m_loadThread[0].start();
-	
-/*	// multithreaded: works (tested)
-	
+
 	m_loadThread[1].stopAndClear();
 	m_loadThread[1].setWf(m_content, 1);
 	m_loadThread[1].start();

@@ -19,7 +19,6 @@
 
 class QwtColorMap;
 
-
 /*!
   \brief Structure for layer definitions
 
@@ -32,34 +31,73 @@ class QwtColorMap;
   \param maxx Maximum x value for the layer
   \param miny Minimum y value for the layer
   \param maxy Maximum y value for the layer
-  \param Xaxis Attached Qwt X scale index (type of QwtPlot::Axis)
-  \param Yaxis Attached Qwt Y scale index (type of QwtPlot::Axis)
+  \param Xscale Attached Qwt X scale
+  \param Yscale Attached Qwt Y scale
   \param noscaleX Switch on/off the scaling of the layer on X
   \param noscaleY Switch on/off the scaling of the layer on Y
   \param opacity Layer (painter) opacity (0..1)
   \param range For internal use
   \param colorMap Color map used for the layer data
   \param rect Rect for image drawing, for internal use
-
+  \param x_id X axis id from QwtPlot::Axis
+  \param y_id Y axis id from QwtPlot::Axis
+  \param plot_x QwtPlot widget reference (for X axis to listen to)
+  \param plot_y QwtPlot widget reference (for Y axis to listen to)
   \sa QwtPlotWaterfall
  */
-typedef struct QwtWfLayer_t {
+class QwtWfLayer_t: public QObject  {
+	Q_OBJECT
+public:
+	QwtWfLayer_t () {
+		colorMap = NULL;
+		Xscale = NULL;
+		Yscale = NULL;
+		plot_x = NULL;
+		plot_y = NULL;
+		x_id = -1;
+		y_id = -1;
+		noscaleX = false;
+		noscaleY = false;
+	};
+
+	void	attachAxis(qint32 axid, QwtPlot *p);
+	void	detatchAxis(bool x, bool y);
 	QImage		image;
-	qint32		w, h;
 	qreal		minx, miny, maxx, maxy;
-	int		Xaxis, Yaxis;
+	QwtScaleWidget	*Xscale, *Yscale;
 	bool		noscaleX, noscaleY;
 	qreal		opacity;
 	QwtInterval	range;
 	QwtColorMap	*colorMap;
 	QRect		rect;
-} QwtWfLayer_t;
+	void		attach(QWidget *wd);
+	
+	qint32		get_x_id() {return x_id;}
+	qint32		get_y_id() {return y_id;}
+	
+protected Q_SLOTS:
+	void	xplotscaleDivChanged();
+	void	yplotscaleDivChanged();
 
+protected:
+	QWidget	*myparent;	// *QwtPlotWaterfall
+	QwtPlot	*plot_x, *plot_y;
+	qint32	x_id, y_id;
+	void	plotscaleDivChanged();
+};
+// QwtWfLayer_t;
+
+/*!
+  \brief Qwt waterfall (datafall) widget
+
+  \note It is possible to use variables inside QwtWfLayer_t - noscaleX, noscaleY - to set static sizes of the separate layer.
+  Functions append*() are used to append some data to a layer. Colormap is used to map values inside the 2D region to color value.
+
+*/
 
 class QwtPlotWaterfall : public QWidget
 {
 	Q_OBJECT
-
 public:
 	QwtPlotWaterfall(QWidget* parent = 0);
 	~QwtPlotWaterfall();
@@ -83,22 +121,31 @@ public:
   Color map is used to map values inside the 2D region to color value.
   
   \note It is normal to use opacity level. Basic styling of underlying QwtPlot::canvas() is supported.
-
+  
   \param width Widget width (as Qt widget)
-  \param width Widget height (as Qt widget)
+  \param height Widget height (as Qt widget)
   \param minx Minimum x value for the layer
   \param maxx Maximum x value for the layer
   \param miny Minimum y value for the layer
   \param maxy Maximum y value for the layer
   \param minval Minimum (expected) value of data
   \param maxval Maximum (expected) value of data
-  \param Xa Attached Qwt X scale index (type of QwtPlot::Axis or -1 if not attached)
-  \param Ya Attached Qwt Y scale index (type of QwtPlot::Axis or -1 if not attached)
   \param fm Of type QImage::Format. Supported QImage::Format_ARGB32 and QImage::Format_RGB32.
   \param fil Fill color for the layer (QColor).
-  \param opacity Layer (painter) opacity [0..1.0]
+  \param opacity Layer (painter) opacity [0 .. 1.0]
  */
-	bool addLayer(qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, int Xa, int Ya, QImage::Format fm, QColor fil, qreal opacity );
+	bool addLayer(qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity );
+
+/*!
+  \brief Adds a new layer
+  
+  \param range Is of type QwtInterval
+
+  \sa addLayer
+ */
+	bool addLayer(qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity );
+
+
 
 /*!
    \brief Delete a layer
@@ -108,18 +155,18 @@ public:
 	void deleteLayer(qint32 l);
 
 /*!
-  \brief Adds a new layer
-  
-  \param range Is of type QwtInterval
-
-  \sa addLayer
- */
-	bool addLayer(qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, int Xa, int Ya, QImage::Format fm, QColor fil, qreal opacity );
+   \brief Detatch layer from an axis
+   
+   \param l Layer index
+   \param X If true, stops X attachement
+   \param Y If true, stops Y attachement
+*/
+	void detatchAxis(qint32 l,  bool X,  bool Y);
 
 /*!
   \brief Data color map
   
-  It is avalaible as public member.
+  It is avalaible as a public member.
   Color map is used to map values inside the 2D region to color value.
   
   \sa setColorMap
@@ -127,17 +174,17 @@ public:
 	QwtColorMap *colorMap;
 
 /*!
-  \brief QList of layers
+  \brief (Q)List of layers
   
-  It is avalaible as public member.
-  It is possible to use variables inside QwtWfLayer_t - noscaleX, noscaleY - to set static sizes of the layer.
+  It is avalaible as a public member.
+
   Default - false.
 
  */
 	QList<QwtWfLayer_t *> layers;
 	
 /*!
-  \brief Append data from bottom
+  \brief Append data to bottom
   
   Data 'data' is a linear array (of doubles) of size w*h.
 
@@ -148,7 +195,7 @@ public:
  */
 	void	appendB(qint32 l, double *data, int w, int h);
 /*!
-  \brief Append data from bottom
+  \brief Append data to bottom
   
   \param data Of type QRgb.
   
@@ -221,11 +268,31 @@ public:
 /*!
   \brief Attach QwtPlot widget parent
   
+  \note This operation attaches a plot widget for WF layers drawing.
+  
   \param plot QwtPlot widget where to place layers
  */
 	void attach( QwtPlot *plot );
-	
+
+/*!
+  \brief Attach axis
+  
+  \param l Layer index
+  \param axid Qwt::Axis id
+  \param p QwtPlot widget with axes to listen for changes
+ */
+	void attachAxis(qint32 l,  qint32 axid, QwtPlot *p);
+
 	virtual bool eventFilter( QObject *, QEvent * );
+	
+	void	Update();
+
+	bool	is_orig_set(){ return orig_set;}
+	qint32	get_orig_w(){ return orig_w;}
+	qint32	get_orig_h(){ return orig_h;}
+
+	void lockForRead();
+	void unlockForRead();
 		
 public Q_SLOTS:
 	void replot();
@@ -235,11 +302,11 @@ protected:
 	void resizeEvent(QResizeEvent *event);
 	QwtPlot *plott;
 
-protected Q_SLOTS:
-	void plotscaleDivChanged();
+//protected Q_SLOTS:
+//	void plotscaleDivChanged();
 
 private:
-	bool		axis_used[QwtPlot:: axisCnt];
+//	bool		axis_used[QwtPlot:: axisCnt];
 	QPainter	painter;
 	QPainterPath	borderClip;
 	bool		orig_set;
