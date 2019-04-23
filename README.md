@@ -35,7 +35,7 @@ Usage workflow:
 * create QwtPlot with canvas
 * create WF widget
 * add WF layer[s] to the WF widget
-* attach WF widget to the plot canvas, where WF can draws layers
+* attach WF widget to the plot canvas, where WF can draw layers
 * attach layers to [different] QwtPlot/axes
 
 
