@@ -284,7 +284,12 @@ public:
 	void attachAxis(qint32 l,  qint32 axid, QwtPlot *p);
 
 	virtual bool eventFilter( QObject *, QEvent * );
-	
+
+/*!
+  \brief Update graph
+
+  \note Use it in a timer of the parent QwtPlot
+ */
 	void	Update();
 
 	bool	is_orig_set(){ return orig_set;}
@@ -293,7 +298,8 @@ public:
 
 	void lockForRead();
 	void unlockForRead();
-		
+	
+	
 public Q_SLOTS:
 	void replot();
     

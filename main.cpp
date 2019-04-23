@@ -14,10 +14,38 @@ public:
 };
 
 MainWindow::MainWindow( QWidget *parent ):
-    QMainWindow( parent )
+	QMainWindow( parent )
 {
-    Plot *plot = new Plot( this );
-    setCentralWidget( plot );
+QVBoxLayout *l = new QVBoxLayout();
+QWidget *win = new QWidget();
+
+QGridLayout *l1 = new QGridLayout();
+QWidget *win1 = new QWidget();
+QLabel *win2 = new QLabel("<font color=Red><b>Some label</b></font>");
+win1->setLayout(l1);
+l->addWidget(win1);
+
+	win2->resize(50, 50);
+	l1->addWidget(win2, 0, 1);
+
+	l->setMargin( 5 );
+	l->setSpacing( 5 );
+
+	win->setLayout(l);
+	setCentralWidget( win );
+
+	Plot *plot = new Plot(NULL, NULL);
+	plot->resize(200, 200);
+//	l->addWidget(plot);
+	l1->addWidget(plot, 0, 0);
+
+	
+
+	// make plot1 listen to changes of scales in plot
+	Plot *plot1 = new Plot(plot, NULL );
+	plot1->resize(300, 300);
+	l->addWidget(plot1);
+    
 /*
     QToolBar *toolBar = new QToolBar( this );
 
@@ -54,7 +82,7 @@ int main( int argc, char **argv )
     QApplication a( argc, argv );
 
     MainWindow mainWindow;
-    mainWindow.resize( 640, 480 );
+    mainWindow.resize( 800, 800 );
     mainWindow.show();
 
 

@@ -295,9 +295,9 @@ return QWidget::eventFilter( object, e );
 }
 
 
-
 void QwtPlotWaterfall::Update(){
-	plott->canvas()->update();
+//	plott->canvas()->update();
+	update();
 }
 
 
@@ -375,7 +375,8 @@ for ( QList<QwtWfLayer_t*>::iterator it = layers.begin(); it != layers.end(); ++
 	borderClip = canva->borderPath( rr);
 
 
-	update();
+//	update();
+	Update();
 //	event->ignore();
 	event->accept();
 }
@@ -463,7 +464,7 @@ if(l < layers.count()) {
 rw_lock->unlock();
 
 //	update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 void QwtPlotWaterfall::appendB(qint32 l, QRgb *data, int w, int h)
@@ -490,7 +491,7 @@ if(l < layers.count()) {
 
 rw_lock->unlock();
 //	update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 void QwtPlotWaterfall::appendT(qint32 l, double *data, int w, int h)
@@ -515,7 +516,7 @@ if(l < layers.count())  {
 	}
 rw_lock->unlock();
 //	update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 void QwtPlotWaterfall::appendT(qint32 l, QRgb *data, int w, int h)
@@ -541,7 +542,7 @@ if(l < layers.count())  {
 	}
 rw_lock->unlock();
 //	update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 
@@ -569,7 +570,7 @@ if(l < layers.count())  {
 	}
 rw_lock->unlock();
 //update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 void QwtPlotWaterfall::appendL(qint32 l, QRgb *data, int w, int h)
@@ -596,7 +597,7 @@ if(l < layers.count())  {
 	}
 rw_lock->unlock();
 //update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 void QwtPlotWaterfall::appendR(qint32 l, double *data, int w, int h)
@@ -623,7 +624,7 @@ if(l < layers.count())  {
 	}
 rw_lock->unlock();
 // update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 
 void QwtPlotWaterfall::appendR(qint32 l, QRgb *data, int w, int h)
@@ -650,6 +651,6 @@ if(l < layers.count())  {
 	}
 rw_lock->unlock();
 // update();
-plott->canvas()->update();
+//plott->canvas()->update();
 }
 

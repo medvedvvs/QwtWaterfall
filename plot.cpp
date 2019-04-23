@@ -35,14 +35,16 @@ public:
     }
 };
 
-Plot::Plot( QWidget *parent ):
+Plot::Plot(QwtPlot *plo, QWidget *parent ):
     QwtPlot( parent )
 {
+	setAutoReplot( false );
 	QwtPlotCanvas *canvas = new QwtPlotCanvas();
 	canvas->setBorderRadius( 10 );
+	canvas->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
 
 	setCanvas( canvas );
-//	resize(1024, 4096);
+//	resize(300, 200);
 	setCanvasBackground( QColor( "MidnightBlue" ) );
 
 //    this->canvas()->installEventFilter( this );
@@ -64,11 +66,19 @@ Plot::Plot( QWidget *parent ):
 		}
 	m_content->attach(this);
 
+	if(!plo) {
 	m_content->layers[0]->attachAxis(yLeft, this);
 	m_content->layers[1]->attachAxis(xBottom, this);
 	m_content->layers[1]->attachAxis(yLeft, this);
 	m_content->layers[2]->attachAxis(xBottom, this);
 	m_content->layers[2]->attachAxis(yLeft, this);
+	} else {
+	m_content->layers[0]->attachAxis(yLeft, plo);
+	m_content->layers[1]->attachAxis(xBottom, plo);
+	m_content->layers[1]->attachAxis(yLeft, plo);
+	m_content->layers[2]->attachAxis(xBottom, plo);
+	m_content->layers[2]->attachAxis(yLeft, plo);
+	}
 
 
 
@@ -132,6 +142,10 @@ Plot::Plot( QWidget *parent ):
 	magnifier->setAxisEnabled( QwtPlot::yRight, false );
 
 
+//	d_clock.start();
+	d_timerId = startTimer( 10 );
+
+
 	// single thread, 3 layers
 	// set l to -1 to enable 3 layers in 1 thread
 	m_loadThread[0].stopAndClear();
@@ -153,6 +167,18 @@ Plot::Plot( QWidget *parent ):
 */	
 
 }
+
+void Plot::timerEvent( QTimerEvent *event )
+{   
+    if ( event->timerId() == d_timerId )
+    {
+	m_content->Update();
+	return;
+	}
+    
+QwtPlot::timerEvent( event );
+}
+
 
 void Plot::exportPlot()
 {
