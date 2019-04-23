@@ -1,0 +1,428 @@
+.TH "QwtPlotWaterfall" 3 "Tue Apr 23 2019" "QwtWaterfall" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+QwtPlotWaterfall \- Qwt waterfall (datafall) widget\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <qwt_plot_waterfall\&.h>\fP
+.PP
+Inherits QWidget\&.
+.SS "Public Slots"
+
+.in +1c
+.ti -1c
+.RI "void \fBreplot\fP ()"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBQwtPlotWaterfall\fP (QWidget *parent=0)"
+.br
+.ti -1c
+.RI "void \fBsetColorMap\fP (qint32 l, QwtColorMap *m)"
+.br
+.RI "\fISet the color map for the layer\&. \fP"
+.ti -1c
+.RI "bool \fBaddLayer\fP (qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity)"
+.br
+.RI "\fIAdds a new layer\&. \fP"
+.ti -1c
+.RI "bool \fBaddLayer\fP (qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity)"
+.br
+.RI "\fIAdds a new layer\&. \fP"
+.ti -1c
+.RI "void \fBdeleteLayer\fP (qint32 l)"
+.br
+.RI "\fIDelete a layer\&. \fP"
+.ti -1c
+.RI "void \fBdetatchAxis\fP (qint32 l, bool X, bool Y)"
+.br
+.RI "\fIDetatch layer from an axis\&. \fP"
+.ti -1c
+.RI "void \fBappendB\fP (qint32 l, double *data, int w, int h)"
+.br
+.RI "\fIAppend data to bottom\&. \fP"
+.ti -1c
+.RI "void \fBappendB\fP (qint32 l, QRgb *data, int w, int h)"
+.br
+.RI "\fIAppend data to bottom\&. \fP"
+.ti -1c
+.RI "void \fBappendT\fP (qint32 l, double *data, int w, int h)"
+.br
+.RI "\fIAppend data from top\&. \fP"
+.ti -1c
+.RI "void \fBappendT\fP (qint32 l, QRgb *data, int w, int h)"
+.br
+.RI "\fIAppend data from top\&. \fP"
+.ti -1c
+.RI "void \fBappendL\fP (qint32 l, double *data, int w, int h)"
+.br
+.RI "\fIAppend data from left\&. \fP"
+.ti -1c
+.RI "void \fBappendL\fP (qint32 l, QRgb *data, int w, int h)"
+.br
+.RI "\fIAppend data from left\&. \fP"
+.ti -1c
+.RI "void \fBappendR\fP (qint32 l, double *data, int w, int h)"
+.br
+.RI "\fIAppend data from right\&. \fP"
+.ti -1c
+.RI "void \fBappendR\fP (qint32 l, QRgb *data, int w, int h)"
+.br
+.RI "\fIAppend data from right\&. \fP"
+.ti -1c
+.RI "void \fBattach\fP (QwtPlot *plot)"
+.br
+.RI "\fIAttach QwtPlot widget parent\&. \fP"
+.ti -1c
+.RI "void \fBattachAxis\fP (qint32 l, qint32 axid, QwtPlot *p)"
+.br
+.RI "\fIAttach axis\&. \fP"
+.ti -1c
+.RI "virtual bool \fBeventFilter\fP (QObject *, QEvent *)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP ()"
+.br
+.ti -1c
+.RI "bool \fBis_orig_set\fP ()"
+.br
+.ti -1c
+.RI "qint32 \fBget_orig_w\fP ()"
+.br
+.ti -1c
+.RI "qint32 \fBget_orig_h\fP ()"
+.br
+.ti -1c
+.RI "void \fBlockForRead\fP ()"
+.br
+.ti -1c
+.RI "void \fBunlockForRead\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "QwtColorMap * \fBcolorMap\fP"
+.br
+.RI "\fIData color map\&. \fP"
+.ti -1c
+.RI "QList< \fBQwtWfLayer_t\fP * > \fBlayers\fP"
+.br
+.RI "\fI(Q)List of layers \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBpaintEvent\fP (QPaintEvent *event)"
+.br
+.ti -1c
+.RI "void \fBresizeEvent\fP (QResizeEvent *event)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "QwtPlot * \fBplott\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Qwt waterfall (datafall) widget\&. 
+
+
+.PP
+\fBNote:\fP
+.RS 4
+It is possible to use variables inside \fBQwtWfLayer_t\fP - noscaleX, noscaleY - to set static sizes of the separate layer\&. Functions append*() are used to append some data to a layer\&. Colormap is used to map values inside the 2D region to color value\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "bool QwtPlotWaterfall::addLayer (qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity)"
+
+.PP
+Adds a new layer\&. New layer is an image (2D) with colored data points Color map is used to map values inside the 2D region to color value\&.
+.PP
+\fBNote:\fP
+.RS 4
+It is normal to use opacity level\&. Basic styling of underlying QwtPlot::canvas() is supported\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwidth\fP Widget width (as Qt widget) 
+.br
+\fIheight\fP Widget height (as Qt widget) 
+.br
+\fIminx\fP Minimum x value for the layer 
+.br
+\fImaxx\fP Maximum x value for the layer 
+.br
+\fIminy\fP Minimum y value for the layer 
+.br
+\fImaxy\fP Maximum y value for the layer 
+.br
+\fIminval\fP Minimum (expected) value of data 
+.br
+\fImaxval\fP Maximum (expected) value of data 
+.br
+\fIfm\fP Of type QImage::Format\&. Supported QImage::Format_ARGB32 and QImage::Format_RGB32\&. 
+.br
+\fIfil\fP Fill color for the layer (QColor)\&. 
+.br
+\fIopacity\fP Layer (painter) opacity [0 \&.\&. 1\&.0] 
+.RE
+.PP
+
+.SS "bool QwtPlotWaterfall::addLayer (qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity)"
+
+.PP
+Adds a new layer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrange\fP Is of type QwtInterval
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaddLayer\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendB (qint32 l, double * data, int w, int h)"
+
+.PP
+Append data to bottom\&. Data 'data' is a linear array (of doubles) of size w*h\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index (max: layers->count() - 1); 
+.br
+\fIdata\fP Array of double values\&. Size: w*h\&. 
+.br
+\fIw\fP Width of the data block\&. 
+.br
+\fIh\fP Height of the data block\&. 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendB (qint32 l, QRgb * data, int w, int h)"
+
+.PP
+Append data to bottom\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP Of type QRgb\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBappendB\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendL (qint32 l, double * data, int w, int h)"
+
+.PP
+Append data from left\&. Data 'data' is a linear array (of doubles) of size w*h\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index (max: layers->count() - 1); 
+.br
+\fIdata\fP Array of double values\&. Size: w*h\&. 
+.br
+\fIw\fP Width of the data block\&. 
+.br
+\fIh\fP Height of the data block\&. 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendL (qint32 l, QRgb * data, int w, int h)"
+
+.PP
+Append data from left\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP Of type QRgb\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBappendL\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendR (qint32 l, double * data, int w, int h)"
+
+.PP
+Append data from right\&. Data 'data' is a linear array (of doubles) of size w*h\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index (max: layers->count() - 1); 
+.br
+\fIdata\fP Array of double values\&. Size: w*h\&. 
+.br
+\fIw\fP Width of the data block\&. 
+.br
+\fIh\fP Height of the data block\&. 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendR (qint32 l, QRgb * data, int w, int h)"
+
+.PP
+Append data from right\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP Of type QRgb\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBappendR\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendT (qint32 l, double * data, int w, int h)"
+
+.PP
+Append data from top\&. Data 'data' is a linear array (of doubles) of size w*h\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index (max: layers->count() - 1); 
+.br
+\fIdata\fP Array of double values\&. Size: w*h\&. 
+.br
+\fIw\fP Width of the data block\&. 
+.br
+\fIh\fP Height of the data block\&. 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::appendT (qint32 l, QRgb * data, int w, int h)"
+
+.PP
+Append data from top\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP Of type QRgb\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBappendT\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::attach (QwtPlot * plot)"
+
+.PP
+Attach QwtPlot widget parent\&. 
+.PP
+\fBNote:\fP
+.RS 4
+This operation attaches a plot widget for WF layers drawing\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIplot\fP QwtPlot widget where to place layers 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::attachAxis (qint32 l, qint32 axid, QwtPlot * p)"
+
+.PP
+Attach axis\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index 
+.br
+\fIaxid\fP Qwt::Axis id 
+.br
+\fIp\fP QwtPlot widget with axes to listen for changes 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::deleteLayer (qint32 l)"
+
+.PP
+Delete a layer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::detatchAxis (qint32 l, bool X, bool Y)"
+
+.PP
+Detatch layer from an axis\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index 
+.br
+\fIX\fP If true, stops X attachement 
+.br
+\fIY\fP If true, stops Y attachement 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::setColorMap (qint32 l, QwtColorMap * m)"
+
+.PP
+Set the color map for the layer\&. Color map is used to map values inside the 2D region to color value\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIl\fP Layer index\&. Must be in range [0\&.\&.layers\&.count()-1] 
+.br
+\fIm\fP QwtColorMap 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "QwtColorMap* QwtPlotWaterfall::colorMap"
+
+.PP
+Data color map\&. It is avalaible as a public member\&. Color map is used to map values inside the 2D region to color value\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBsetColorMap\fP 
+.RE
+.PP
+
+.SS "QList<\fBQwtWfLayer_t\fP *> QwtPlotWaterfall::layers"
+
+.PP
+(Q)List of layers It is avalaible as a public member\&.
+.PP
+Default - false\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for QwtWaterfall from the source code\&.

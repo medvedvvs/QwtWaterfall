@@ -1,0 +1,168 @@
+.TH "QwtWfLayer_t" 3 "Tue Apr 23 2019" "QwtWaterfall" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+QwtWfLayer_t \- Structure for layer definitions\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <qwt_plot_waterfall\&.h>\fP
+.PP
+Inherits QObject\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBattachAxis\fP (qint32 axid, QwtPlot *p)"
+.br
+.ti -1c
+.RI "void \fBdetatchAxis\fP (bool x, bool y)"
+.br
+.ti -1c
+.RI "void \fBattach\fP (QWidget *wd)"
+.br
+.ti -1c
+.RI "qint32 \fBget_x_id\fP ()"
+.br
+.ti -1c
+.RI "qint32 \fBget_y_id\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "QImage \fBimage\fP"
+.br
+.ti -1c
+.RI "qreal \fBminx\fP"
+.br
+.ti -1c
+.RI "qreal \fBminy\fP"
+.br
+.ti -1c
+.RI "qreal \fBmaxx\fP"
+.br
+.ti -1c
+.RI "qreal \fBmaxy\fP"
+.br
+.ti -1c
+.RI "QwtScaleWidget * \fBXscale\fP"
+.br
+.ti -1c
+.RI "QwtScaleWidget * \fBYscale\fP"
+.br
+.ti -1c
+.RI "bool \fBnoscaleX\fP"
+.br
+.ti -1c
+.RI "bool \fBnoscaleY\fP"
+.br
+.ti -1c
+.RI "qreal \fBopacity\fP"
+.br
+.ti -1c
+.RI "QwtInterval \fBrange\fP"
+.br
+.ti -1c
+.RI "QwtColorMap * \fBcolorMap\fP"
+.br
+.ti -1c
+.RI "QRect \fBrect\fP"
+.br
+.in -1c
+.SS "Protected Slots"
+
+.in +1c
+.ti -1c
+.RI "void \fBxplotscaleDivChanged\fP ()"
+.br
+.ti -1c
+.RI "void \fByplotscaleDivChanged\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBplotscaleDivChanged\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "QWidget * \fBmyparent\fP"
+.br
+.ti -1c
+.RI "QwtPlot * \fBplot_x\fP"
+.br
+.ti -1c
+.RI "QwtPlot * \fBplot_y\fP"
+.br
+.ti -1c
+.RI "qint32 \fBx_id\fP"
+.br
+.ti -1c
+.RI "qint32 \fBy_id\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure for layer definitions\&. 
+
+Layers, that are QImage in nature, are used to render some raster data\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimage\fP Image widget itself 
+.br
+\fIw\fP Width of the layer 
+.br
+\fIh\fP Height of the layer 
+.br
+\fIminx\fP Minimum x value for the layer 
+.br
+\fImaxx\fP Maximum x value for the layer 
+.br
+\fIminy\fP Minimum y value for the layer 
+.br
+\fImaxy\fP Maximum y value for the layer 
+.br
+\fIXscale\fP Attached Qwt X scale 
+.br
+\fIYscale\fP Attached Qwt Y scale 
+.br
+\fInoscaleX\fP Switch on/off the scaling of the layer on X 
+.br
+\fInoscaleY\fP Switch on/off the scaling of the layer on Y 
+.br
+\fIopacity\fP Layer (painter) opacity (0\&.\&.1) 
+.br
+\fIrange\fP For internal use 
+.br
+\fIcolorMap\fP Color map used for the layer data 
+.br
+\fIrect\fP Rect for image drawing, for internal use 
+.br
+\fIx_id\fP X axis id from QwtPlot::Axis 
+.br
+\fIy_id\fP Y axis id from QwtPlot::Axis 
+.br
+\fIplot_x\fP QwtPlot widget reference (for X axis to listen to) 
+.br
+\fIplot_y\fP QwtPlot widget reference (for Y axis to listen to) 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBQwtPlotWaterfall\fP 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for QwtWaterfall from the source code\&.
