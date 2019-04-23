@@ -2,7 +2,7 @@
 
 ![WF QwtPlot screen](/WF.png)
 
-It is the alpha version, but works nice. *Please check it.*
+It is the alpha version, but works fine. *Please check it.*
 
 Basic idea is to keep qwt's ideology and portability while making all things
 faster (compared to existing implementations over QwtSpectr..QwtRaster..etc) for intensive data streams.
@@ -33,11 +33,11 @@ then (*NIX):
  **~$ make**
 
 Usage workflow:
-* create QwtPlot with canvas
-* create WF widget
-* add WF layer[s] to the WF widget
-* attach WF widget to the plot canvas, where WF can draw layers
-* attach layers to [different] QwtPlot/axes
-
+1. create QwtPlot with canvas
+2. create WF widget
+3. add WF layer[s] to the WF widget
+4. attach WF widget to the plot canvas, where WF can draw layers
+5. attach layers to [different] QwtPlot/axes
+6. start timer in QwtPlot parent with WF->Update() call
 
 Qt/qwt versions tested: 5.12.* vs 6.1.4
