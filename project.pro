@@ -15,11 +15,15 @@ INCLUDEPATH += .
 HEADERS = \
 	qwtThreadManager.h \
 	qwt_plot_waterfall.h \
+	wf_scale_draw.h \
+	magnifier.h \
 	plot.h
 
 SOURCES = \
 	qwtThreadManager.cpp \ 
 	qwt_plot_waterfall.cpp \
 	plot.cpp \
+	wf_scale_draw.cpp \
+	magnifier.cpp \
 	main.cpp
 

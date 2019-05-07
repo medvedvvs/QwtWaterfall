@@ -38,6 +38,9 @@ QwtPlotWaterfall::QwtPlotWaterfall(QWidget* parent /*= 0*/)
 	orig_set = false;
 	resize(parent->width(), parent->height());
 	rw_lock = new QReadWriteLock(QReadWriteLock::Recursive);
+	native_xaxid = QwtPlot::xBottom;
+	native_yaxid = QwtPlot::yLeft;
+	current_layer = 0;
 }
 
 bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval,  QImage::Format fm, QColor fil, qreal opacity )
@@ -60,6 +63,9 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	la->noscaleX = false;
 	la->noscaleY = false;
 	la->attach(this);
+	la->id = current_layer;
+	current_layer++;
+
 	
 	layers.append(la);
 return true;
@@ -104,8 +110,25 @@ if(l < layers.count())
 
 }
 
+void QwtPlotWaterfall::reattachAxis(bool lock){
+if(lock) rw_lock->lockForWrite();
+for(int i = 0; i < layers.count(); i++)
+	layers[i]->reattachAxis();
+if(lock) rw_lock->unlock();
+}
+
+
+void QwtPlotWaterfall::plotscaleDivChanged(){
+//if(lock) rw_lock->lockForWrite();
+//printf("QwtPlotWaterfall::plotscaleDivChanged\n");
+for(int i = 0; i < layers.count(); i++)
+	layers[i]->plotscaleDivChanged();
+//if(lock) rw_lock->unlock();
+}
+
 void QwtWfLayer_t::attach(QWidget *wd){
 	myparent = wd;
+
 }
 
 void QwtWfLayer_t::attachAxis(qint32 axid, QwtPlot  *p){
@@ -115,6 +138,7 @@ void QwtWfLayer_t::attachAxis(qint32 axid, QwtPlot  *p){
 			Xscale = p->axisWidget( axid );
 			x_id = axid;
 			plot_x = p;
+			orig_foreign_mx = p->canvasMap(axid);
 			}
 		if(Xscale != NULL) {
 			connect( p->axisWidget( axid ), SIGNAL( scaleDivChanged() ), SLOT(xplotscaleDivChanged() ) );
@@ -127,6 +151,7 @@ void QwtWfLayer_t::attachAxis(qint32 axid, QwtPlot  *p){
 			Yscale = p->axisWidget( axid );
 			y_id = axid;
 			plot_y = p;
+			orig_foreign_my = p->canvasMap(axid);
 			}
 		if(Yscale != NULL) {
 			connect( p->axisWidget( axid ), SIGNAL( scaleDivChanged() ), SLOT( yplotscaleDivChanged() ) );
@@ -134,6 +159,13 @@ void QwtWfLayer_t::attachAxis(qint32 axid, QwtPlot  *p){
 		}
 	}
 
+}
+
+void QwtWfLayer_t::reattachAxis(){
+	if(plot_x != NULL)
+		orig_foreign_mx = plot_x->canvasMap(x_id);
+	if(plot_y != NULL)
+		orig_foreign_my = plot_y->canvasMap(y_id);
 }
 
 //vvs: check this:
@@ -154,10 +186,12 @@ void QwtWfLayer_t::detatchAxis(bool x, bool y){
 }
 
 void QwtWfLayer_t::xplotscaleDivChanged() {
+//	printf("--------------------- xplotscaleDivChanged called\n");
 	plotscaleDivChanged();
 }
 
 void QwtWfLayer_t::yplotscaleDivChanged() {
+//	printf("--------------------- yplotscaleDivChanged called\n");
 	plotscaleDivChanged();
 }
 
@@ -170,66 +204,104 @@ void QwtPlotWaterfall::unlockForRead(){
 	rw_lock->unlock();
 	}
 
+
 void QwtWfLayer_t::plotscaleDivChanged()
 {
-qint32	w, h, x , y, wi, he;
-qreal 	scx, scy;
-QwtScaleMap mx, my;
+qreal	wi, he;
+qreal 	w, h, x, y, scx, scy, local_scx, local_scy, foreign_scx, foreign_scy, shift_x, shift_y;
+QwtScaleMap mx, my, mxx, myy;
 QwtPlotWaterfall *p = reinterpret_cast<QwtPlotWaterfall *>(myparent);
 
+//printf("QwtWfLayer_t::plotscaleDivChanged image WH: %d %d\n", image.width(), image.height());
 if(p && p->is_orig_set()) {
 	p->lockForRead();
-	wi = p->width();
-	he = p->height();
-	scx = (qreal)wi / (qreal)p->get_orig_w();
-	scy = (qreal)he / (qreal)p->get_orig_h();
 
-	if(Xscale == NULL) {
-		mx.setPaintInterval(minx, minx + image.width());
-		mx.setScaleInterval(minx, maxx);
-		} else {
+	foreign_scx = 1;
+	foreign_scy = 1;
+	shift_x = 0;
+	shift_y = 0;
+
+	mxx = p->plott->canvasMap(p->native_xaxid);
+	myy = p->plott->canvasMap(p->native_yaxid);
+
+
+//	wi = p->width();
+//	he = p->height();
+//	scx = wi / (qreal)p->get_orig_w();
+//	scy = he / (qreal)p->get_orig_h();
+//	scx = 1;
+//	scy = 1;
+	scx = mxx.sDist() / p->orig_xrange;
+	scy = myy.sDist() / p->orig_yrange;
+
+	if(plot_x != NULL) {
 		mx = plot_x->canvasMap(x_id);
+		if(p->plott != plot_x) {	 // avoid self-loop
+		foreign_scx = (mx.sDist() / orig_foreign_mx.sDist());
+		local_scx = (mxx.sDist() / p->orig_xrange);
+		foreign_scx = local_scx / foreign_scx;
+		shift_x =  foreign_scx * (orig_foreign_mx.s1() - mx.s1()) * p->orig_xrange / orig_foreign_mx.sDist();
+//		shift_x =  foreign_scx * (orig_foreign_mx.s1() - mx.s1());
 		}
-		
-	 if(Yscale == NULL ){
-	 	my.setPaintInterval(miny, miny + image.height());
-		my.setScaleInterval(miny, maxy);
-	 	} else {
-	 	my = plot_y->canvasMap(y_id);
-	 	}
-
-	QRectF ff(minx, maxx,  fabs(maxx - minx), fabs((maxy - miny)));
-//	printf("FF: %f %f %f %f | %f %f %f %f \n", mx.p1(), mx.p2(), mx.s1(), mx.s2(), my.p1(), my.p2(), my.s1(), my.s2());
-	QRectF f = QwtScaleMap::transform (mx, my, ff);
-
-	if(Xscale == NULL) {
-		w = fabs(maxx - minx);
-		x = minx;
-		if(!noscaleX) {
-			w *= scx;
-			x *= scx;
-			}
-			
-		} else {
-		w = qRound(f.width());
-		x = qRound(f.left());
+//		else
+//		scx = mxx.sDist() / p->orig_xrange;
 		}
 
-	if(Yscale == NULL) {
-		if(!noscaleY) {
-			h = fabs(maxy - miny) * scy;
-			y = he - miny * scy -  h;
-			} else {
-			h = fabs(maxy - miny);
-			y = he - miny -  h;
-			}
-		} else {
-		h = qRound(f.height());
-		y = qRound(f.bottom());
+	if(plot_y != NULL) {
+		my = plot_y->canvasMap(y_id);
+		if(p->plott != plot_y) {	 // avoid self-loop
+		foreign_scy = (my.sDist() / orig_foreign_my.sDist());
+		local_scy = myy.sDist() / p->orig_yrange;
+		foreign_scy = local_scy / foreign_scy;
+		shift_y =  foreign_scy * (orig_foreign_my.s1() - my.s1()) * p->orig_yrange / orig_foreign_my.sDist();
+//		shift_y =  foreign_scy * (orig_foreign_my.s1() - my.s1());
 		}
-	rect.setRect(x, y, w, h);
+//		else
+//		scy = myy.sDist() / p->orig_yrange;
+		}
+
+	
+	w = qAbs(maxx - minx) * foreign_scx;
+	x = minx * foreign_scx + shift_x;
+
+	h = qAbs(maxy - miny) * foreign_scy;
+	y = miny * foreign_scy + shift_y;
+/*	
+	printf("\nplotscaleDivChanged\n");
+	printf("%d --- orig ranges %f %f %f %f\n", p->id, p->orig_xrange, p->orig_yrange, mxx.sDist(), myy.sDist());
+	printf("%d --- newforx %f %f %f %f   %f %f\n", p->id, mx.p1(), mx.p2(), mx.s1(), mx.s2(), mx.pDist(), mx.sDist());
+	printf("%d --- newfory %f %f %f %f   %f %f\n", p->id, my.p1(), my.p2(), my.s1(), my.s2(), my.pDist(), my.sDist());
+	if(plot_x != NULL) printf("%d --- origforx %f %f %f %f   %f %f\n", p->id, orig_foreign_mx.p1(), orig_foreign_mx.p2(), orig_foreign_mx.s1(), orig_foreign_mx.s2(), orig_foreign_mx.pDist(), orig_foreign_mx.sDist());
+	if(plot_y != NULL) printf("%d --- origfory %f %f %f %f   %f %f\n", p->id, orig_foreign_my.p1(), orig_foreign_my.p2(), orig_foreign_my.s1(), orig_foreign_my.s2(), orig_foreign_my.pDist(), orig_foreign_my.sDist());
+	printf("%d -------- %.3f %.3f %.3f %.3f | scales: %f %f %f %f shift: %f %f\n", p->id, x, y, w, h, scx, scy, foreign_scx, foreign_scy, shift_x, shift_y);
+*/
+
+	if(!noscaleX) {
+	w /= scx;
+	x /= scx;
+	}
+
+	if(!noscaleY) {
+	h /= scy;
+	y /= scy;
+	}
+
+
+	
+//	rect.setRect(x, y, w, h);
+	QRectF ff(x, y, w, h);
+//	mx = p->plott->canvasMap(p->native_xaxid);
+//	my = p->plott->canvasMap(p->native_yaxid);
+	QRectF f = QwtScaleMap::transform (mxx, myy, ff);
+
+//	printf("		%d plotscaleDivChanged %.4f %.4f    MINMAX: %.4f %.4f %.4f %.4f FSC: %.4f %.4f\n", id, scx, scy, minx, miny, maxx, maxy, foreign_scx, foreign_scy);
+//	printf("		WxH: %.4f %.4f XY: %.4f %.4f  Rect: %.4f %.4f   %.4f x %.4f\n", w, h, x, y, f.left(), f.top(), f.width(), f.height());
+
+//	la->rect.setRect(x, y, w, h);
+	rect.setRect(f.left(), f.top(), f.width(), f.height());
 	p->unlockForRead();
 	}
+
 
 //	QwtPlotCanvas *canva = reinterpret_cast<QwtPlotCanvas *>( plott->canvas());
 //	QRect rr = canva->rect();
@@ -253,6 +325,8 @@ void QwtPlotWaterfall::attach( QwtPlot *plot_ ) {
 if(plot_) {
 	plott = plot_;
 	plott->canvas()->installEventFilter( this );
+	connect( plott->axisWidget(native_xaxid), SIGNAL( scaleDivChanged() ), SLOT(plotscaleDivChanged() ) );
+	connect( plott->axisWidget(native_yaxid), SIGNAL( scaleDivChanged() ), SLOT(plotscaleDivChanged() ) );
 	}
 
 }
@@ -285,10 +359,33 @@ bool QwtPlotWaterfall::eventFilter( QObject *object, QEvent *e )
 		// emit resizeEvent() via resize()
 		resize(plott->canvas()->width(), plott->canvas()->height());
 		}
+		
+
+		
+		
 	}
 
+	if ( e->type() == QEvent::LayoutRequest )
+	{
+		static int cnt = 0;
+		if ( object == plott->canvas() )
+		{
+		// emit resizeEvent() via resize()
+		resize(plott->canvas()->width(), plott->canvas()->height());
+//		printf("------------------ GOT LayoutRequest %d\n", cnt);
+		cnt++;
+		}
+		
+
+		
+		
+	}	
+
+//		if( object == this)
+//		printf(" Event THIS %p\n", object);
+
 	#ifdef WF_DEBUG_EVENTS
-	if(e->type() != QEvent::Paint) qDebug() << "WF event" << e;
+	if(e->type() != QEvent::Paint) qDebug() << "WF event" << e << object;
 	#endif
 
 return QWidget::eventFilter( object, e );
@@ -304,67 +401,101 @@ void QwtPlotWaterfall::Update(){
 void QwtPlotWaterfall::resizeEvent(QResizeEvent *event)
 {
 QwtWfLayer_t *la;
-qint32	w, h, x , y;
-qreal 	scx, scy;
-QwtScaleMap mx, my;
+qreal	scx, scy;
+qreal 	w, h, x, y, shift_x, shift_y, local_scx, local_scy, foreign_scx, foreign_scy; // , foreign_scx = 1, foreign_scy = 1;
+QwtScaleMap mx, my, mxx, myy;
+
+//printf("Resize event\n");
+rw_lock->lockForRead();
 
 	if(!orig_set) {
-		orig_w = width();
-		orig_h = height();
+		reattachAxis(false);
+		mx = plott->canvasMap(native_xaxid);
+		my = plott->canvasMap(native_yaxid);
+//		printf("OrigX --- %f %f %f %f   %f %f\n", mx.p1(), mx.p2(), mx.s1(), mx.s2(), mx.pDist(), mx.sDist());
+//		printf("OrigY --- %f %f %f %f   %f %f\n", my.p1(), my.p2(), my.s1(), my.s2(), my.pDist(), my.sDist());
+		orig_w = mx.pDist();
+		orig_h = my.pDist();
+		orig_xrange = mx.sDist();
+		orig_yrange = my.sDist();
 		orig_set = true;
-                }
-	scx = (qreal)width() / (qreal)orig_w;
-	scy = (qreal)height() / (qreal)orig_h;
+		}
 
-rw_lock->lockForRead();
+	mxx = plott->canvasMap(native_xaxid);
+	myy = plott->canvasMap(native_yaxid);
+
+//	scx = mxx.pDist() / (qreal)orig_w;
+//	scy = myy.pDist() / (qreal)orig_h;
+	scx = mxx.sDist() / orig_xrange;
+	scy = myy.sDist() / orig_yrange;
+//	printf("Scale to %f %f\n", scx, scy);
+//	scx = 1;
+//	scy = 1;
+//printf("%f %f     %f %f %d %d\n", scx, scy, wi, he, orig_w, orig_h);
 
 for ( QList<QwtWfLayer_t*>::iterator it = layers.begin(); it != layers.end(); ++it)
 	{
 	la = *it;
-	
-	if(la->Xscale == NULL) {
-		mx.setPaintInterval(la->minx, la->minx + la->image.width());
-		mx.setScaleInterval(la->minx, la->maxx);
-		} else
-		mx = plott->canvasMap(la->get_x_id());
-		
-	 if(la->Yscale == NULL ){
-	 	my.setPaintInterval(la->miny, la->miny + la->image.height());
-		my.setScaleInterval(la->miny, la->maxy);
-	 	} else
-	 	my = plott->canvasMap(la->get_y_id());
-	
-	QRectF ff(la->minx, la->maxx,  fabs(la->maxx - la->minx), fabs((la->maxy - la->miny)));
-//	printf("FF: %f %f %f %f | %f %f %f %f \n", mx.p1(), mx.p2(), mx.s1(), mx.s2(), my.p1(), my.p2(), my.s1(), my.s2());
-	QRectF f = QwtScaleMap::transform (mx, my, ff);
 
-	if(la->Xscale == NULL) {
-		w = fabs(la->maxx - la->minx);
-		x = la->minx;
-		if(!la->noscaleX) {
-			w *= scx;
-			x *= scx;
-			}
-			
-		} else {
-		w = qRound(f.width());
-		x = qRound(f.left());
+	// calculate foreign scaling and offset (physical (scale) valyes, not screen)
+	foreign_scx = 1;
+	foreign_scy = 1;
+	shift_x = 0;
+	shift_y = 0;
+	
+	if(la->plot_x != NULL) {
+		mx = la->plot_x->canvasMap(la->x_id);
+		if(plott != la->plot_x) {	 // avoid self-loop
+		foreign_scx =  (mx.sDist() / la->orig_foreign_mx.sDist());
+		local_scx = (mxx.sDist() / orig_xrange);
+		foreign_scx = local_scx / foreign_scx;
+//		shift_x =  foreign_scx * (la->orig_foreign_mx.s1() - mx.s1());
+		shift_x =  foreign_scx * (la->orig_foreign_mx.s1() - mx.s1()) * orig_xrange / la->orig_foreign_mx.sDist();
+		}
 		}
 
-	if(la->Yscale == NULL) {
-		if(!la->noscaleX) {
-			h = fabs(la->maxy - la->miny) * scy;
-			y = height() - la->miny * scy -  h;
-			} else {
-			h = fabs(la->maxy - la->miny);
-			y = height() - la->miny -  h;
-			}
-		} else {
-		h = qRound(f.height());
-		y = qRound(f.bottom());
+	if(la->plot_y != NULL) {
+		my = la->plot_y->canvasMap(la->y_id);
+		if(plott != la->plot_y) {	 // avoid self-loop
+		foreign_scy = (my.sDist() / la->orig_foreign_my.sDist());
+		local_scy = (myy.sDist() / orig_yrange);
+		foreign_scy = local_scy / foreign_scy;
+//		shift_y =  foreign_scy * (la->orig_foreign_my.s1() - my.s1());
+		shift_y =  foreign_scy * (la->orig_foreign_my.s1() - my.s1()) * orig_yrange / la->orig_foreign_my.sDist();
+		}
 		}
 
-	la->rect.setRect(x, y, w, h);
+
+	w = qAbs(la->maxx - la->minx) * foreign_scx;
+	h = qAbs(la->maxy - la->miny) * foreign_scy;
+	
+	x = la->minx * foreign_scx + shift_x;
+	y = la->miny * foreign_scy + shift_y;
+
+	if(!la->noscaleX) { // scale here to keep original size and position
+	w /= scx;
+	x /= scx;
+	}
+
+	if(!la->noscaleY) { // scale here to keep original size and position
+	h /= scy;
+	y /= scy;
+	}
+
+	
+//	rect.setRect(x, y, w, h);
+	QRectF ff(x, y, w, h);
+//	mx = plott->canvasMap(native_xaxid);
+//	my = plott->canvasMap(native_yaxid);
+	QRectF f = QwtScaleMap::transform (mxx, myy, ff);
+
+//	printf("		%d plotscaleDivChanged %f %f    MINMAX: %f %f %f %f FSC: %f %f\n", id, scx, scy, minx, miny, maxx, maxy, foreign_scx, foreign_scy);
+//	printf("		%d Resize              %.4f %.4f    MINMAX: %.4f %.4f %.4f %.4f FSC: %.4f %.4f\n", la->id, scx, scy, la->minx, la->miny, la->maxx, la->maxy, foreign_scx, foreign_scy);
+//	printf("		WxH: %.4f %.4f XY: %.4f %.4f  Rect: %.4f %.4f   %.4f x %.4f\n", w, h, x, y, f.left(), f.top(), f.width(), f.height());
+
+//	la->rect.setRect(x, y, w, h);	
+
+	la->rect.setRect(f.left(), f.top(), f.width(), f.height());
 	}
 	
 	rw_lock->unlock();

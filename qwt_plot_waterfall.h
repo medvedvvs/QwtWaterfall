@@ -61,6 +61,7 @@ public:
 	};
 
 	void	attachAxis(qint32 axid, QwtPlot *p);
+	void	reattachAxis();
 	void	detatchAxis(bool x, bool y);
 	QImage		image;
 	qreal		minx, miny, maxx, maxy;
@@ -69,21 +70,28 @@ public:
 	qreal		opacity;
 	QwtInterval	range;
 	QwtColorMap	*colorMap;
-	QRect		rect;
+	QRectF		rect;
 	void		attach(QWidget *wd);
 	
-	qint32		get_x_id() {return x_id;}
-	qint32		get_y_id() {return y_id;}
+//	qint32		get_x_id() {return x_id;}
+//	qint32		get_y_id() {return y_id;}
+
+	qint32		x_id, y_id;	
+
+	QwtPlot		*plot_x, *plot_y;
+	QwtScaleMap	orig_foreign_mx, orig_foreign_my;
+	qreal	corrector_x, corrector_y;
+	void	plotscaleDivChanged();
+	qint32		id;
 	
 protected Q_SLOTS:
 	void	xplotscaleDivChanged();
 	void	yplotscaleDivChanged();
 
 protected:
-	QWidget	*myparent;	// *QwtPlotWaterfall
-	QwtPlot	*plot_x, *plot_y;
-	qint32	x_id, y_id;
-	void	plotscaleDivChanged();
+	QWidget		*myparent;	// *QwtPlotWaterfall
+
+	
 };
 // QwtWfLayer_t;
 
@@ -103,7 +111,8 @@ public:
 	~QwtPlotWaterfall();
 
 public:
-
+	int id;
+	int current_layer;
 /*!
   \brief Set the color map for the layer
 
@@ -282,6 +291,8 @@ public:
   \param p QwtPlot widget with axes to listen for changes
  */
 	void attachAxis(qint32 l,  qint32 axid, QwtPlot *p);
+	
+	void reattachAxis(bool lock);
 
 	virtual bool eventFilter( QObject *, QEvent * );
 
@@ -293,12 +304,17 @@ public:
 	void	Update();
 
 	bool	is_orig_set(){ return orig_set;}
-	qint32	get_orig_w(){ return orig_w;}
-	qint32	get_orig_h(){ return orig_h;}
+	qreal	get_orig_w(){ return orig_w;}
+	qreal	get_orig_h(){ return orig_h;}
+
+	qreal		orig_w, orig_h;
+	qreal		orig_xrange, orig_yrange;	// original ranges in scale measure
+	qint32		native_xaxid, native_yaxid;	// native plot x and y axis id
 
 	void lockForRead();
 	void unlockForRead();
-	
+
+	QwtPlot *plott;
 	
 public Q_SLOTS:
 	void replot();
@@ -306,18 +322,19 @@ public Q_SLOTS:
 protected:
 	void paintEvent(QPaintEvent *event);
 	void resizeEvent(QResizeEvent *event);
-	QwtPlot *plott;
 
-//protected Q_SLOTS:
-//	void plotscaleDivChanged();
+
+protected Q_SLOTS:
+	void plotscaleDivChanged();
 
 private:
 //	bool		axis_used[QwtPlot:: axisCnt];
 	QPainter	painter;
 	QPainterPath	borderClip;
 	bool		orig_set;
-	qint32		orig_w, orig_h;
+
 	QReadWriteLock	*rw_lock;
+	
 };
 
 

@@ -10,10 +10,14 @@ class Plot: public QwtPlot
 public:
 	Plot(QwtPlot *p,  QWidget * = NULL );
 	QwtPlotWaterfall* m_content;
-//	virtual bool eventFilter( QObject *, QEvent * );
+	virtual bool eventFilter( QObject *, QEvent * );
 
+void initAxis( int axis, const QString& title);
 public Q_SLOTS:
 	void exportPlot();
+	void Panned(int dx, int dy);
+	void    plotscDivChanged();
+
 
 private:
 	qwtThreadManager m_loadThread[3];
@@ -22,5 +26,6 @@ private:
 protected:
 	virtual void timerEvent( QTimerEvent * );
 	int d_timerId;
+	void alignScales();
 
 };

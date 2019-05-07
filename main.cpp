@@ -37,6 +37,7 @@ l->addWidget(win1);
 	Plot *plot = new Plot(NULL, NULL);
 	plot->resize(200, 200);
 //	l->addWidget(plot);
+	plot->m_content->id = 1;
 	l1->addWidget(plot, 0, 0);
 
 	
@@ -44,6 +45,7 @@ l->addWidget(win1);
 	// make plot1 listen to changes of scales in plot
 	Plot *plot1 = new Plot(plot, NULL );
 	plot1->resize(300, 300);
+	plot1->m_content->id = 2;
 	l->addWidget(plot1);
     
 /*

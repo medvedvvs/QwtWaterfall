@@ -2,7 +2,7 @@
 
 ![WF QwtPlot screen](/WF.png)
 
-It is the alpha version, but works fine. *Please check it.*
+It is the beta version, but works fine. *Please check it.*
 
 Basic idea is to keep qwt's ideology and portability while making all things
 faster (compared to existing implementations over QwtSpectr..QwtRaster..etc) for intensive data streams.
@@ -15,13 +15,14 @@ Implemented features
 * multiple layers support; each holding Qimage as a canvas
 * data feed from top, bottom, left and right.
 * control widget and colors/colormap opacity (alpha values)
-* adding data of WxH size 2D blocks [not equal to image W & H]
+* adding data of WxH size 2D blocks [maybe not equal to image W & H]
 * fix WF layer in any position
 * fix layer vertical or horizontal scale (noscaleX, noscaleY in the layer structure)
-* attach (or not) layer to axes (scales) from different QwtPlot widgets (see example)
+* attach (or not) layer to axes (scales) from different source QwtPlot plots (as in the example source code)
 * only RGB colorspace is implemented for now
-* Obeys (+/-) Qt/Qwt styling of background widgets (rounded corners, for example).
-
+* obeys (+/-) Qt/Qwt styling of background widgets (rounded corners, for example).
+* separate pan/zoom operations from source plot
+* mouse-centered magnifier (for testing)
 
 To compile, just edit project.pro and check the path to qwt config file *qwt.prf*,
 then (*NIX):
@@ -32,7 +33,7 @@ then (*NIX):
  
  **~$ make**
 
-Usage workflow:
+Usage workflow (look at the example source code):
 1. create QwtPlot with canvas
 2. create WF widget
 3. add WF layer[s] to the WF widget
