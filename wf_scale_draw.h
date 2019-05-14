@@ -5,16 +5,11 @@
 #include "qwt_scale_draw.h"
 #include "qwt_date.h"
 
+// dummy scale draw
 class QWT_EXPORT WFScaleDraw: public QwtScaleDraw
 {
 public:
-    WFScaleDraw();
-    virtual ~WFScaleDraw();
-
     virtual QwtText label( double ) const;
-
-protected:
-
 };
 
 #endif
