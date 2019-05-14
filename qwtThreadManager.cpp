@@ -63,10 +63,10 @@ bool over = false;
 		usleep(15000);
 //		sleep(1);
 	}
-	for(;;) {
+//	for(;;) {
 	printf("------------------------------------------------------------------- Thread finished\n");
-	usleep(500000);
-	}
+//	usleep(500000);
+//	}
 }
 
 void qwtThreadManager::quit()

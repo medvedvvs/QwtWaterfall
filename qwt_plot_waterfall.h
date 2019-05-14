@@ -181,6 +181,7 @@ public:
   \sa setColorMap
  */
 	QwtColorMap *colorMap;
+	QwtColorMap *colorMap_;
 
 /*!
   \brief (Q)List of layers

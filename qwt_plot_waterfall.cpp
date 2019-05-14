@@ -32,7 +32,8 @@
 QwtPlotWaterfall::QwtPlotWaterfall(QWidget* parent /*= 0*/)
 	:QWidget(parent)
 {
-	colorMap = new QwtLinearColorMap();
+	colorMap_ = new QwtLinearColorMap();
+	colorMap = colorMap_;
 
 	plott = NULL;
 	orig_set = false;
@@ -550,20 +551,17 @@ void QwtPlotWaterfall::replot(){
 
 QwtPlotWaterfall::~QwtPlotWaterfall()
 {
-delete colorMap;
-
 rw_lock->lockForWrite();
 while (!layers.isEmpty())
 	delete layers.takeFirst();
 rw_lock->unlock();
-
 delete rw_lock;
 
+delete colorMap_;
 }
 
 void QwtPlotWaterfall::setColorMap( int l, QwtColorMap *colorMap )
 {
-
 rw_lock->lockForRead();
 if(l < layers.count()) {
 	if ( layers[l]->colorMap != colorMap )
