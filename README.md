@@ -1,7 +1,8 @@
 # Waterfall view widget for Qwt and Qt
 
 ![WF QwtPlot screen](/WF.png)
-![WF QwtPlot screen](/spectrograph1.png)
+
+![Real life example](/spectrograph1.png)
 
 It is the beta version, but works fine. *Please check it.*
 
