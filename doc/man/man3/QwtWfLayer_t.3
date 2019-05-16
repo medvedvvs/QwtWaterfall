@@ -1,4 +1,4 @@
-.TH "QwtWfLayer_t" 3 "Tue Apr 23 2019" "QwtWaterfall" \" -*- nroff -*-
+.TH "QwtWfLayer_t" 3 "Thu May 16 2019" "QwtWaterfall" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -18,16 +18,16 @@ Inherits QObject\&.
 .RI "void \fBattachAxis\fP (qint32 axid, QwtPlot *p)"
 .br
 .ti -1c
+.RI "void \fBreattachAxis\fP ()"
+.br
+.ti -1c
 .RI "void \fBdetatchAxis\fP (bool x, bool y)"
 .br
 .ti -1c
 .RI "void \fBattach\fP (QWidget *wd)"
 .br
 .ti -1c
-.RI "qint32 \fBget_x_id\fP ()"
-.br
-.ti -1c
-.RI "qint32 \fBget_y_id\fP ()"
+.RI "void \fBplotscaleDivChanged\fP ()"
 .br
 .in -1c
 .SS "Public Attributes"
@@ -35,6 +35,12 @@ Inherits QObject\&.
 .in +1c
 .ti -1c
 .RI "QImage \fBimage\fP"
+.br
+.ti -1c
+.RI "QImage::Format \fBformat\fP"
+.br
+.ti -1c
+.RI "QColor \fBfill\fP"
 .br
 .ti -1c
 .RI "qreal \fBminx\fP"
@@ -70,7 +76,34 @@ Inherits QObject\&.
 .RI "QwtColorMap * \fBcolorMap\fP"
 .br
 .ti -1c
-.RI "QRect \fBrect\fP"
+.RI "QRectF \fBrect\fP"
+.br
+.ti -1c
+.RI "qint32 \fBx_id\fP"
+.br
+.ti -1c
+.RI "qint32 \fBy_id\fP"
+.br
+.ti -1c
+.RI "QwtPlot * \fBplot_x\fP"
+.br
+.ti -1c
+.RI "QwtPlot * \fBplot_y\fP"
+.br
+.ti -1c
+.RI "QwtScaleMap \fBorig_foreign_mx\fP"
+.br
+.ti -1c
+.RI "QwtScaleMap \fBorig_foreign_my\fP"
+.br
+.ti -1c
+.RI "qreal \fBcorrector_x\fP"
+.br
+.ti -1c
+.RI "qreal \fBcorrector_y\fP"
+.br
+.ti -1c
+.RI "qint32 \fBid\fP"
 .br
 .in -1c
 .SS "Protected Slots"
@@ -83,30 +116,11 @@ Inherits QObject\&.
 .RI "void \fByplotscaleDivChanged\fP ()"
 .br
 .in -1c
-.SS "Protected Member Functions"
-
-.in +1c
-.ti -1c
-.RI "void \fBplotscaleDivChanged\fP ()"
-.br
-.in -1c
 .SS "Protected Attributes"
 
 .in +1c
 .ti -1c
 .RI "QWidget * \fBmyparent\fP"
-.br
-.ti -1c
-.RI "QwtPlot * \fBplot_x\fP"
-.br
-.ti -1c
-.RI "QwtPlot * \fBplot_y\fP"
-.br
-.ti -1c
-.RI "qint32 \fBx_id\fP"
-.br
-.ti -1c
-.RI "qint32 \fBy_id\fP"
 .br
 .in -1c
 .SH "Detailed Description"

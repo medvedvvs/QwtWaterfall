@@ -64,6 +64,8 @@ public:
 	void	reattachAxis();
 	void	detatchAxis(bool x, bool y);
 	QImage		image;
+	QImage::Format	format;
+	QColor		fill;
 	qreal		minx, miny, maxx, maxy;
 	QwtScaleWidget	*Xscale, *Yscale;
 	bool		noscaleX, noscaleY;
@@ -162,6 +164,52 @@ public:
    \param l Layer index
 */
 	void deleteLayer(qint32 l);
+
+/*!
+  \brief Reconfig a layer
+  
+  \param id Layer index
+  \param width Layer width
+  \param height Layer height
+  \param minx Layer minimum x-scale value
+  \param miny Layer minimum y-scale value
+  \param maxx Layer maximum x-scale value
+  \param maxy Layer maximum y-scale value
+  \param minval Layer minimum (z-scale) value
+  \param maxval Layer maximum (z-scale) value
+
+
+  ~~~~~~~~~~~~~~~{.c}
+  // example of reconfig procedure in a Plot with WF widget:
+  setAxisScale( QwtPlot::xBottom, minx, maxx );	// set new scale interval in WF widget section in a plot
+  setAxisScale( QwtPlot::yLeft, miny, maxy );
+  updateAxes();	// required
+  zoomer->setZoomBase();	// if zoomer is used in a Plot
+  WF->reconfigLayer(0, width, height, minx, miny, maxx, maxy, minval, maxval);	// update layer 0 values
+  WF->reconfig();	// update WF widget itself
+  ~~~~~~~~~~~~~~~
+
+  \sa addLayer
+ */
+	bool reconfigLayer(qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval);
+/*!
+  \brief Reconfig a layer
+  
+  \sa addLayer reconfigLayer
+ */
+	bool reconfigLayer(qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity );
+/*!
+  \brief Reconfig a layer
+  
+  \sa addLayer reconfigLayer
+ */
+	bool reconfigLayer(qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity );
+/*!
+  \brief Reconfig a waterfall plot internals
+  \sa addLayer reconfigLayer
+ */
+	void reconfig();
+
 
 /*!
    \brief Detatch layer from an axis
@@ -305,6 +353,7 @@ public:
 	void	Update();
 
 	bool	is_orig_set(){ return orig_set;}
+
 	qreal	get_orig_w(){ return orig_w;}
 	qreal	get_orig_h(){ return orig_h;}
 
@@ -312,8 +361,38 @@ public:
 	qreal		orig_xrange, orig_yrange;	// original ranges in scale measure
 	qint32		native_xaxid, native_yaxid;	// native plot x and y axis id
 
+/*!
+  \brief Lock wf plot for read operations
+
+  \note Used in pair with unlockForRead()
+  \note Not required for reconfigLayer()
+  
+  \sa unlockForRead
+ */
 	void lockForRead();
+/*!
+  \brief Unlock wf plot for read operations
+
+  \note Used in pair with lockForRead()
+  \sa lockForRead
+ */
 	void unlockForRead();
+/*!
+  \brief Lock wf plot for direct layers write/reconfig operations
+
+  \note Not required for reconfigLayer()
+  
+  \note Used in pair with unlockForWrite()
+  \sa unlockForWrite
+ */
+	void lockForWrite();
+/*!
+  \brief Lock wf plot for direct layers write/reconfig operations
+
+  \note Used in pair with lockForWrite()
+  \sa lockForWrite
+ */
+	void unlockForWrite();
 
 	QwtPlot *plott;
 	

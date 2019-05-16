@@ -108,8 +108,8 @@ $(document).ready(function(){initNavTree('class_qwt_plot_waterfall.html','');});
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-slots">Protected Slots</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_qwt_plot_waterfall-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">QwtPlotWaterfall Class Reference</div>  </div>
@@ -152,6 +152,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a30dae7e239035ab47b53fa288fb5bbea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a30dae7e239035ab47b53fa288fb5bbea">deleteLayer</a> (qint32 l)</td></tr>
 <tr class="memdesc:a30dae7e239035ab47b53fa288fb5bbea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a layer.  <a href="#a30dae7e239035ab47b53fa288fb5bbea">More...</a><br /></td></tr>
 <tr class="separator:a30dae7e239035ab47b53fa288fb5bbea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c29cbdf9a41ecf00985ba26c5362e7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a0c29cbdf9a41ecf00985ba26c5362e7c">reconfigLayer</a> (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval)</td></tr>
+<tr class="memdesc:a0c29cbdf9a41ecf00985ba26c5362e7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconfig a layer.  <a href="#a0c29cbdf9a41ecf00985ba26c5362e7c">More...</a><br /></td></tr>
+<tr class="separator:a0c29cbdf9a41ecf00985ba26c5362e7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ec639b8cf17424571b868c7ce2676c4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a2ec639b8cf17424571b868c7ce2676c4">reconfigLayer</a> (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity)</td></tr>
+<tr class="memdesc:a2ec639b8cf17424571b868c7ce2676c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconfig a layer.  <a href="#a2ec639b8cf17424571b868c7ce2676c4">More...</a><br /></td></tr>
+<tr class="separator:a2ec639b8cf17424571b868c7ce2676c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee2050527fdf11d485479d85929f0b84"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#aee2050527fdf11d485479d85929f0b84">reconfigLayer</a> (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity)</td></tr>
+<tr class="memdesc:aee2050527fdf11d485479d85929f0b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconfig a layer.  <a href="#aee2050527fdf11d485479d85929f0b84">More...</a><br /></td></tr>
+<tr class="separator:aee2050527fdf11d485479d85929f0b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35d77d23f89301d5b5fdc7e235b3f073"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a35d77d23f89301d5b5fdc7e235b3f073">reconfig</a> ()</td></tr>
+<tr class="memdesc:a35d77d23f89301d5b5fdc7e235b3f073"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconfig a waterfall plot internals.  <a href="#a35d77d23f89301d5b5fdc7e235b3f073">More...</a><br /></td></tr>
+<tr class="separator:a35d77d23f89301d5b5fdc7e235b3f073"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcb1fc084753440d226ba5e6d49ce9f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#afcb1fc084753440d226ba5e6d49ce9f0">detatchAxis</a> (qint32 l, bool X, bool Y)</td></tr>
 <tr class="memdesc:afcb1fc084753440d226ba5e6d49ce9f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detatch layer from an axis.  <a href="#afcb1fc084753440d226ba5e6d49ce9f0">More...</a><br /></td></tr>
 <tr class="separator:afcb1fc084753440d226ba5e6d49ce9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,36 +197,81 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9ad6023db833570d4194fff9191cf013"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a9ad6023db833570d4194fff9191cf013">attachAxis</a> (qint32 l, qint32 axid, QwtPlot *p)</td></tr>
 <tr class="memdesc:a9ad6023db833570d4194fff9191cf013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach axis.  <a href="#a9ad6023db833570d4194fff9191cf013">More...</a><br /></td></tr>
 <tr class="separator:a9ad6023db833570d4194fff9191cf013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb0c285718aed8b8b30ad6bbde481031"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb0c285718aed8b8b30ad6bbde481031"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reattachAxis</b> (bool lock)</td></tr>
+<tr class="separator:adb0c285718aed8b8b30ad6bbde481031"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03aba94c4c13d40dd1acf9a39ebf9899"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a03aba94c4c13d40dd1acf9a39ebf9899"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>eventFilter</b> (QObject *, QEvent *)</td></tr>
 <tr class="separator:a03aba94c4c13d40dd1acf9a39ebf9899"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e29679ea21726b575874101beb04626"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5e29679ea21726b575874101beb04626"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> ()</td></tr>
+<tr class="memitem:a5e29679ea21726b575874101beb04626"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a5e29679ea21726b575874101beb04626">Update</a> ()</td></tr>
+<tr class="memdesc:a5e29679ea21726b575874101beb04626"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update graph.  <a href="#a5e29679ea21726b575874101beb04626">More...</a><br /></td></tr>
 <tr class="separator:a5e29679ea21726b575874101beb04626"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa9d0576ab43b87be70791a16c22c368"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa9d0576ab43b87be70791a16c22c368"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_orig_set</b> ()</td></tr>
 <tr class="separator:afa9d0576ab43b87be70791a16c22c368"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80091001ce725b1aa61fae355eeb3433"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80091001ce725b1aa61fae355eeb3433"></a>
-qint32&#160;</td><td class="memItemRight" valign="bottom"><b>get_orig_w</b> ()</td></tr>
-<tr class="separator:a80091001ce725b1aa61fae355eeb3433"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe002ff74340ededc170229d92733d6e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afe002ff74340ededc170229d92733d6e"></a>
-qint32&#160;</td><td class="memItemRight" valign="bottom"><b>get_orig_h</b> ()</td></tr>
-<tr class="separator:afe002ff74340ededc170229d92733d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a842837c277e03ca19a429379a29de442"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a842837c277e03ca19a429379a29de442"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>lockForRead</b> ()</td></tr>
+<tr class="memitem:a54f2f07cee6e788f84be343ad49677a8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54f2f07cee6e788f84be343ad49677a8"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>get_orig_w</b> ()</td></tr>
+<tr class="separator:a54f2f07cee6e788f84be343ad49677a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34f04a70d4621a973ddabca13a274172"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a34f04a70d4621a973ddabca13a274172"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>get_orig_h</b> ()</td></tr>
+<tr class="separator:a34f04a70d4621a973ddabca13a274172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842837c277e03ca19a429379a29de442"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a842837c277e03ca19a429379a29de442">lockForRead</a> ()</td></tr>
+<tr class="memdesc:a842837c277e03ca19a429379a29de442"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock wf plot for read operations.  <a href="#a842837c277e03ca19a429379a29de442">More...</a><br /></td></tr>
 <tr class="separator:a842837c277e03ca19a429379a29de442"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6defec04ee51e7d9dd1dada18c01b84"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6defec04ee51e7d9dd1dada18c01b84"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>unlockForRead</b> ()</td></tr>
+<tr class="memitem:ac6defec04ee51e7d9dd1dada18c01b84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#ac6defec04ee51e7d9dd1dada18c01b84">unlockForRead</a> ()</td></tr>
+<tr class="memdesc:ac6defec04ee51e7d9dd1dada18c01b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlock wf plot for read operations.  <a href="#ac6defec04ee51e7d9dd1dada18c01b84">More...</a><br /></td></tr>
 <tr class="separator:ac6defec04ee51e7d9dd1dada18c01b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a814d1b6fcf26702a3dfaf6b1bb51d2a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a814d1b6fcf26702a3dfaf6b1bb51d2a5">lockForWrite</a> ()</td></tr>
+<tr class="memdesc:a814d1b6fcf26702a3dfaf6b1bb51d2a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock wf plot for direct layers write/reconfig operations.  <a href="#a814d1b6fcf26702a3dfaf6b1bb51d2a5">More...</a><br /></td></tr>
+<tr class="separator:a814d1b6fcf26702a3dfaf6b1bb51d2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f65b067403e386c3a5f387c821fde77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#a9f65b067403e386c3a5f387c821fde77">unlockForWrite</a> ()</td></tr>
+<tr class="memdesc:a9f65b067403e386c3a5f387c821fde77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock wf plot for direct layers write/reconfig operations.  <a href="#a9f65b067403e386c3a5f387c821fde77">More...</a><br /></td></tr>
+<tr class="separator:a9f65b067403e386c3a5f387c821fde77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a84902c4b5404b79dacd61899b8b2e961"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84902c4b5404b79dacd61899b8b2e961"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="separator:a84902c4b5404b79dacd61899b8b2e961"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9a16a30659b1c7ecb0958f3a13f2f5e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae9a16a30659b1c7ecb0958f3a13f2f5e"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>current_layer</b></td></tr>
+<tr class="separator:ae9a16a30659b1c7ecb0958f3a13f2f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabdfe728799cca76e1d64b9485c9eac7"><td class="memItemLeft" align="right" valign="top">QwtColorMap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#aabdfe728799cca76e1d64b9485c9eac7">colorMap</a></td></tr>
 <tr class="memdesc:aabdfe728799cca76e1d64b9485c9eac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data color map.  <a href="#aabdfe728799cca76e1d64b9485c9eac7">More...</a><br /></td></tr>
 <tr class="separator:aabdfe728799cca76e1d64b9485c9eac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac14d28463b0261bfdd9c9c269917c71a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac14d28463b0261bfdd9c9c269917c71a"></a>
+QwtColorMap *&#160;</td><td class="memItemRight" valign="bottom"><b>colorMap_</b></td></tr>
+<tr class="separator:ac14d28463b0261bfdd9c9c269917c71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbf79b8a52475e49a70fd7bfd70064f8"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="class_qwt_wf_layer__t.html">QwtWfLayer_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qwt_plot_waterfall.html#afbf79b8a52475e49a70fd7bfd70064f8">layers</a></td></tr>
 <tr class="memdesc:afbf79b8a52475e49a70fd7bfd70064f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Q)List of layers  <a href="#afbf79b8a52475e49a70fd7bfd70064f8">More...</a><br /></td></tr>
 <tr class="separator:afbf79b8a52475e49a70fd7bfd70064f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57aa63120074b1258bb4d72d7c95a6f1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a57aa63120074b1258bb4d72d7c95a6f1"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>orig_w</b></td></tr>
+<tr class="separator:a57aa63120074b1258bb4d72d7c95a6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaea9e5a55f813982011f0a00f2dec512"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaea9e5a55f813982011f0a00f2dec512"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>orig_h</b></td></tr>
+<tr class="separator:aaea9e5a55f813982011f0a00f2dec512"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c7e50aa2d4824a5b0fe6726c20e58e9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c7e50aa2d4824a5b0fe6726c20e58e9"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>orig_xrange</b></td></tr>
+<tr class="separator:a3c7e50aa2d4824a5b0fe6726c20e58e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea2e233e318851f8876bc63f8de380e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea2e233e318851f8876bc63f8de380e1"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>orig_yrange</b></td></tr>
+<tr class="separator:aea2e233e318851f8876bc63f8de380e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab62bb188670a38d9ad8e737c8e80282a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab62bb188670a38d9ad8e737c8e80282a"></a>
+qint32&#160;</td><td class="memItemRight" valign="bottom"><b>native_xaxid</b></td></tr>
+<tr class="separator:ab62bb188670a38d9ad8e737c8e80282a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a648a108d8f2d59a7b65a967af451170d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a648a108d8f2d59a7b65a967af451170d"></a>
+qint32&#160;</td><td class="memItemRight" valign="bottom"><b>native_yaxid</b></td></tr>
+<tr class="separator:a648a108d8f2d59a7b65a967af451170d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc0412bc000841ffd35ef1852661a050"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc0412bc000841ffd35ef1852661a050"></a>
+QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plott</b></td></tr>
+<tr class="separator:afc0412bc000841ffd35ef1852661a050"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-slots"></a>
+Protected Slots</h2></td></tr>
+<tr class="memitem:a8623eb33e798fa224f1282bd6b1ff0b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8623eb33e798fa224f1282bd6b1ff0b3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>plotscaleDivChanged</b> ()</td></tr>
+<tr class="separator:a8623eb33e798fa224f1282bd6b1ff0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -224,12 +281,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>paintEvent</b> (QPain
 <tr class="memitem:aab800361c86128b3169f8c6b5c26f654"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab800361c86128b3169f8c6b5c26f654"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeEvent</b> (QResizeEvent *event)</td></tr>
 <tr class="separator:aab800361c86128b3169f8c6b5c26f654"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:afc0412bc000841ffd35ef1852661a050"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc0412bc000841ffd35ef1852661a050"></a>
-QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plott</b></td></tr>
-<tr class="separator:afc0412bc000841ffd35ef1852661a050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Qwt waterfall (datafall) widget. </p>
@@ -939,6 +990,330 @@ QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plott</b></td></
 
 </div>
 </div>
+<a class="anchor" id="a842837c277e03ca19a429379a29de442"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QwtPlotWaterfall::lockForRead </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lock wf plot for read operations. </p>
+<dl class="section note"><dt>Note</dt><dd>Used in pair with <a class="el" href="class_qwt_plot_waterfall.html#ac6defec04ee51e7d9dd1dada18c01b84" title="Unlock wf plot for read operations. ">unlockForRead()</a> </dd>
+<dd>
+Not required for <a class="el" href="class_qwt_plot_waterfall.html#a0c29cbdf9a41ecf00985ba26c5362e7c" title="Reconfig a layer. ">reconfigLayer()</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#ac6defec04ee51e7d9dd1dada18c01b84" title="Unlock wf plot for read operations. ">unlockForRead</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a814d1b6fcf26702a3dfaf6b1bb51d2a5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QwtPlotWaterfall::lockForWrite </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lock wf plot for direct layers write/reconfig operations. </p>
+<dl class="section note"><dt>Note</dt><dd>Not required for <a class="el" href="class_qwt_plot_waterfall.html#a0c29cbdf9a41ecf00985ba26c5362e7c" title="Reconfig a layer. ">reconfigLayer()</a></dd>
+<dd>
+Used in pair with <a class="el" href="class_qwt_plot_waterfall.html#a9f65b067403e386c3a5f387c821fde77" title="Lock wf plot for direct layers write/reconfig operations. ">unlockForWrite()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a9f65b067403e386c3a5f387c821fde77" title="Lock wf plot for direct layers write/reconfig operations. ">unlockForWrite</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a35d77d23f89301d5b5fdc7e235b3f073"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QwtPlotWaterfall::reconfig </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconfig a waterfall plot internals. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a4ea5b417ec91b6b99294ed870f24f470" title="Adds a new layer. ">addLayer</a> <a class="el" href="class_qwt_plot_waterfall.html#a0c29cbdf9a41ecf00985ba26c5362e7c" title="Reconfig a layer. ">reconfigLayer</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0c29cbdf9a41ecf00985ba26c5362e7c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool QwtPlotWaterfall::reconfigLayer </td>
+          <td>(</td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>minx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>miny</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>minval</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxval</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconfig a layer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>Layer index </td></tr>
+    <tr><td class="paramname">width</td><td>Layer width </td></tr>
+    <tr><td class="paramname">height</td><td>Layer height </td></tr>
+    <tr><td class="paramname">minx</td><td>Layer minimum x-scale value </td></tr>
+    <tr><td class="paramname">miny</td><td>Layer minimum y-scale value </td></tr>
+    <tr><td class="paramname">maxx</td><td>Layer maximum x-scale value </td></tr>
+    <tr><td class="paramname">maxy</td><td>Layer maximum y-scale value </td></tr>
+    <tr><td class="paramname">minval</td><td>Layer minimum (z-scale) value </td></tr>
+    <tr><td class="paramname">maxval</td><td>Layer maximum (z-scale) value</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="comment">// example of reconfig procedure in a Plot with WF widget:</span></div>
+<div class="line">setAxisScale( QwtPlot::xBottom, minx, maxx );   <span class="comment">// set new scale interval in WF widget section in a plot</span></div>
+<div class="line">setAxisScale( QwtPlot::yLeft, miny, maxy );</div>
+<div class="line">updateAxes();   <span class="comment">// required</span></div>
+<div class="line">zoomer-&gt;setZoomBase();  <span class="comment">// if zoomer is used in a Plot</span></div>
+<div class="line">WF-&gt;reconfigLayer(0, width, height, minx, miny, maxx, maxy, minval, maxval);    <span class="comment">// update layer 0 values</span></div>
+<div class="line">WF-&gt;reconfig(); <span class="comment">// update WF widget itself</span></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a4ea5b417ec91b6b99294ed870f24f470" title="Adds a new layer. ">addLayer</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2ec639b8cf17424571b868c7ce2676c4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool QwtPlotWaterfall::reconfigLayer </td>
+          <td>(</td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>minx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>miny</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>minval</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxval</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QImage::Format&#160;</td>
+          <td class="paramname"><em>fm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QColor&#160;</td>
+          <td class="paramname"><em>fil</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>opacity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconfig a layer. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a4ea5b417ec91b6b99294ed870f24f470" title="Adds a new layer. ">addLayer</a> <a class="el" href="class_qwt_plot_waterfall.html#a0c29cbdf9a41ecf00985ba26c5362e7c" title="Reconfig a layer. ">reconfigLayer</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aee2050527fdf11d485479d85929f0b84"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool QwtPlotWaterfall::reconfigLayer </td>
+          <td>(</td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint32&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>minx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>miny</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>maxy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QwtInterval&#160;</td>
+          <td class="paramname"><em>range</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QImage::Format&#160;</td>
+          <td class="paramname"><em>fm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QColor&#160;</td>
+          <td class="paramname"><em>fil</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qreal&#160;</td>
+          <td class="paramname"><em>opacity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconfig a layer. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a4ea5b417ec91b6b99294ed870f24f470" title="Adds a new layer. ">addLayer</a> <a class="el" href="class_qwt_plot_waterfall.html#a0c29cbdf9a41ecf00985ba26c5362e7c" title="Reconfig a layer. ">reconfigLayer</a> </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a99fd436a57982ef92ad567f22a9d126e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -972,6 +1347,62 @@ QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plott</b></td></
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="ac6defec04ee51e7d9dd1dada18c01b84"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QwtPlotWaterfall::unlockForRead </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Unlock wf plot for read operations. </p>
+<dl class="section note"><dt>Note</dt><dd>Used in pair with <a class="el" href="class_qwt_plot_waterfall.html#a842837c277e03ca19a429379a29de442" title="Lock wf plot for read operations. ">lockForRead()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a842837c277e03ca19a429379a29de442" title="Lock wf plot for read operations. ">lockForRead</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9f65b067403e386c3a5f387c821fde77"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QwtPlotWaterfall::unlockForWrite </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lock wf plot for direct layers write/reconfig operations. </p>
+<dl class="section note"><dt>Note</dt><dd>Used in pair with <a class="el" href="class_qwt_plot_waterfall.html#a814d1b6fcf26702a3dfaf6b1bb51d2a5" title="Lock wf plot for direct layers write/reconfig operations. ">lockForWrite()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qwt_plot_waterfall.html#a814d1b6fcf26702a3dfaf6b1bb51d2a5" title="Lock wf plot for direct layers write/reconfig operations. ">lockForWrite</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5e29679ea21726b575874101beb04626"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QwtPlotWaterfall::Update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update graph. </p>
+<dl class="section note"><dt>Note</dt><dd>Use it in a timer of the parent QwtPlot </dd></dl>
 
 </div>
 </div>
@@ -1018,7 +1449,7 @@ QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plott</b></td></
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_qwt_plot_waterfall.html">QwtPlotWaterfall</a></li>
-    <li class="footer">Generated on Tue Apr 23 2019 10:45:06 for QwtWaterfall by
+    <li class="footer">Generated on Thu May 16 2019 14:32:35 for QwtWaterfall by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

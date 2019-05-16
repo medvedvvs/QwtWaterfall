@@ -108,7 +108,6 @@ $(document).ready(function(){initNavTree('class_qwt_wf_layer__t.html','');});
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-slots">Protected Slots</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_qwt_wf_layer__t-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -134,24 +133,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a302be1e42fb58cffe99ef83b77ec722b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a302be1e42fb58cffe99ef83b77ec722b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>attachAxis</b> (qint32 axid, QwtPlot *p)</td></tr>
 <tr class="separator:a302be1e42fb58cffe99ef83b77ec722b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a556858e67c5e7be09e903584f2d780e5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a556858e67c5e7be09e903584f2d780e5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reattachAxis</b> ()</td></tr>
+<tr class="separator:a556858e67c5e7be09e903584f2d780e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d5938e105379ce4f8198ae4c1f9d634"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d5938e105379ce4f8198ae4c1f9d634"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>detatchAxis</b> (bool x, bool y)</td></tr>
 <tr class="separator:a0d5938e105379ce4f8198ae4c1f9d634"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fc097602d4baf901091b1423a68b78f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2fc097602d4baf901091b1423a68b78f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>attach</b> (QWidget *wd)</td></tr>
 <tr class="separator:a2fc097602d4baf901091b1423a68b78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a336d81fb2b8750f3bf75742beb1e0498"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a336d81fb2b8750f3bf75742beb1e0498"></a>
-qint32&#160;</td><td class="memItemRight" valign="bottom"><b>get_x_id</b> ()</td></tr>
-<tr class="separator:a336d81fb2b8750f3bf75742beb1e0498"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace8a26060a26fe2d4d6b55488d8ef6e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ace8a26060a26fe2d4d6b55488d8ef6e2"></a>
-qint32&#160;</td><td class="memItemRight" valign="bottom"><b>get_y_id</b> ()</td></tr>
-<tr class="separator:ace8a26060a26fe2d4d6b55488d8ef6e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5c26aa7a013ec0ff80023e6f2f849d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5c26aa7a013ec0ff80023e6f2f849d1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>plotscaleDivChanged</b> ()</td></tr>
+<tr class="separator:ae5c26aa7a013ec0ff80023e6f2f849d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ac4ed303dc35fc0e3a429a8d14699f278"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac4ed303dc35fc0e3a429a8d14699f278"></a>
 QImage&#160;</td><td class="memItemRight" valign="bottom"><b>image</b></td></tr>
 <tr class="separator:ac4ed303dc35fc0e3a429a8d14699f278"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70ce91b988b494c4f44311eadbdd6832"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70ce91b988b494c4f44311eadbdd6832"></a>
+QImage::Format&#160;</td><td class="memItemRight" valign="bottom"><b>format</b></td></tr>
+<tr class="separator:a70ce91b988b494c4f44311eadbdd6832"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e7e6c805485684893ab00708b234f24"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e7e6c805485684893ab00708b234f24"></a>
+QColor&#160;</td><td class="memItemRight" valign="bottom"><b>fill</b></td></tr>
+<tr class="separator:a2e7e6c805485684893ab00708b234f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafca741025c7387f28cc1bd0df4d1231"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aafca741025c7387f28cc1bd0df4d1231"></a>
 qreal&#160;</td><td class="memItemRight" valign="bottom"><b>minx</b></td></tr>
 <tr class="separator:aafca741025c7387f28cc1bd0df4d1231"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,9 +190,36 @@ QwtInterval&#160;</td><td class="memItemRight" valign="bottom"><b>range</b></td>
 <tr class="memitem:a6b30597d45324f0ec0e23d4cb784c188"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b30597d45324f0ec0e23d4cb784c188"></a>
 QwtColorMap *&#160;</td><td class="memItemRight" valign="bottom"><b>colorMap</b></td></tr>
 <tr class="separator:a6b30597d45324f0ec0e23d4cb784c188"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a68efd84efcc835746d2e9234aa1100"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a68efd84efcc835746d2e9234aa1100"></a>
-QRect&#160;</td><td class="memItemRight" valign="bottom"><b>rect</b></td></tr>
-<tr class="separator:a7a68efd84efcc835746d2e9234aa1100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72e5f8ef20f477fd040b638b460cf3ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a72e5f8ef20f477fd040b638b460cf3ff"></a>
+QRectF&#160;</td><td class="memItemRight" valign="bottom"><b>rect</b></td></tr>
+<tr class="separator:a72e5f8ef20f477fd040b638b460cf3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b94fa4fce3fc6f3b9c13dc2f10e0b8b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b94fa4fce3fc6f3b9c13dc2f10e0b8b"></a>
+qint32&#160;</td><td class="memItemRight" valign="bottom"><b>x_id</b></td></tr>
+<tr class="separator:a0b94fa4fce3fc6f3b9c13dc2f10e0b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a872a72fddda0f8ba455f30cc341814c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a872a72fddda0f8ba455f30cc341814c3"></a>
+qint32&#160;</td><td class="memItemRight" valign="bottom"><b>y_id</b></td></tr>
+<tr class="separator:a872a72fddda0f8ba455f30cc341814c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46e56716f2f098e5fb06f509b0d070c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46e56716f2f098e5fb06f509b0d070c6"></a>
+QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plot_x</b></td></tr>
+<tr class="separator:a46e56716f2f098e5fb06f509b0d070c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa163c836836d80aa4b9830f655de1da8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa163c836836d80aa4b9830f655de1da8"></a>
+QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plot_y</b></td></tr>
+<tr class="separator:aa163c836836d80aa4b9830f655de1da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c65b813b0ee22f0d7bf82e7766bbb58"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2c65b813b0ee22f0d7bf82e7766bbb58"></a>
+QwtScaleMap&#160;</td><td class="memItemRight" valign="bottom"><b>orig_foreign_mx</b></td></tr>
+<tr class="separator:a2c65b813b0ee22f0d7bf82e7766bbb58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa101dba9483250f8cb48ccc050913cdd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa101dba9483250f8cb48ccc050913cdd"></a>
+QwtScaleMap&#160;</td><td class="memItemRight" valign="bottom"><b>orig_foreign_my</b></td></tr>
+<tr class="separator:aa101dba9483250f8cb48ccc050913cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa355e147c4d0ec53545a8c287e361170"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa355e147c4d0ec53545a8c287e361170"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>corrector_x</b></td></tr>
+<tr class="separator:aa355e147c4d0ec53545a8c287e361170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9faae700d43f9dafd1272d6b700a781"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9faae700d43f9dafd1272d6b700a781"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>corrector_y</b></td></tr>
+<tr class="separator:af9faae700d43f9dafd1272d6b700a781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7704ea55546ae8772cad0a7591a8f66"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7704ea55546ae8772cad0a7591a8f66"></a>
+qint32&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="separator:ac7704ea55546ae8772cad0a7591a8f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-slots"></a>
 Protected Slots</h2></td></tr>
@@ -198,29 +230,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>xplotscaleDivChanged<
 void&#160;</td><td class="memItemRight" valign="bottom"><b>yplotscaleDivChanged</b> ()</td></tr>
 <tr class="separator:a02aa42d235c93d1d2aefbf340831f59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:ae5c26aa7a013ec0ff80023e6f2f849d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5c26aa7a013ec0ff80023e6f2f849d1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>plotscaleDivChanged</b> ()</td></tr>
-<tr class="separator:ae5c26aa7a013ec0ff80023e6f2f849d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ad170116e2e8d9638b9f7277aab29ee16"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad170116e2e8d9638b9f7277aab29ee16"></a>
 QWidget *&#160;</td><td class="memItemRight" valign="bottom"><b>myparent</b></td></tr>
 <tr class="separator:ad170116e2e8d9638b9f7277aab29ee16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46e56716f2f098e5fb06f509b0d070c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46e56716f2f098e5fb06f509b0d070c6"></a>
-QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plot_x</b></td></tr>
-<tr class="separator:a46e56716f2f098e5fb06f509b0d070c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa163c836836d80aa4b9830f655de1da8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa163c836836d80aa4b9830f655de1da8"></a>
-QwtPlot *&#160;</td><td class="memItemRight" valign="bottom"><b>plot_y</b></td></tr>
-<tr class="separator:aa163c836836d80aa4b9830f655de1da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b94fa4fce3fc6f3b9c13dc2f10e0b8b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b94fa4fce3fc6f3b9c13dc2f10e0b8b"></a>
-qint32&#160;</td><td class="memItemRight" valign="bottom"><b>x_id</b></td></tr>
-<tr class="separator:a0b94fa4fce3fc6f3b9c13dc2f10e0b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a872a72fddda0f8ba455f30cc341814c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a872a72fddda0f8ba455f30cc341814c3"></a>
-qint32&#160;</td><td class="memItemRight" valign="bottom"><b>y_id</b></td></tr>
-<tr class="separator:a872a72fddda0f8ba455f30cc341814c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Structure for layer definitions. </p>
@@ -260,7 +274,7 @@ qint32&#160;</td><td class="memItemRight" valign="bottom"><b>y_id</b></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_qwt_wf_layer__t.html">QwtWfLayer_t</a></li>
-    <li class="footer">Generated on Tue Apr 23 2019 10:45:06 for QwtWaterfall by
+    <li class="footer">Generated on Thu May 16 2019 14:32:35 for QwtWaterfall by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

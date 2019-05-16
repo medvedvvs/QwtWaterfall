@@ -49,6 +49,7 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	QwtWfLayer_t *la = new QwtWfLayer_t;
 //	la->image = QImage(width_, height_, QImage::Format_ARGB32);
 	la->image = QImage(width_, height_, fm);
+	la->format = fm;
 	la->Xscale = NULL;
 	la->Yscale = NULL;
 	la->opacity = opacity;
@@ -60,6 +61,7 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	la->maxy  = maxy;
 //	la->image.fill(QColor(0xA6, 0x66, 0xAF, 66));
 	la->image.fill(fil);
+	la->fill = fil;
 	la->rect.setRect(0, 0, width(), height() );	// initial size
 	la->noscaleX = false;
 	la->noscaleY = false;
@@ -77,6 +79,7 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	QwtWfLayer_t *la = new QwtWfLayer_t;
 //	la->image = QImage(width_, height_, QImage::Format_ARGB32);
 	la->image = QImage(width_, height_, fm);
+	la->format = fm;
 	la->Xscale = NULL;
 	la->Yscale = NULL;
 	la->opacity = opacity;
@@ -88,6 +91,7 @@ bool QwtPlotWaterfall::addLayer(qint32 width_, qint32 height_, qreal minx, qreal
 	la->maxy  = maxy;
 //	la->image.fill(QColor(0xA6, 0x66, 0xAF, 66));
 	la->image.fill(fil);
+	la->fill = fil;
 	la->rect.setRect(0, 0, width(), height() );	// initial size
 	la->noscaleX = false;
 	la->noscaleY = false;
@@ -102,8 +106,87 @@ rw_lock->lockForWrite();
 	if(l >= 0 && l < layers.count())
 		delete layers.takeAt(l);
 rw_lock->unlock();
-		
 }
+
+bool QwtPlotWaterfall::reconfigLayer(qint32 l, qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval)
+{
+QwtWfLayer_t *la = NULL;
+rw_lock->lockForWrite();
+if(l >= 0 && l < layers.count())
+		la = layers[l];	
+if(!la) {
+	rw_lock->unlock();
+	return false;
+	}
+
+fprintf(stderr, "Reconfig layer called\n");
+	la->image = QImage(width_, height_, la->format);
+	la->range = QwtInterval(minval, maxval);
+	la->minx  = minx;
+	la->miny  = miny;
+	la->maxx  = maxx;
+	la->maxy  = maxy;
+	la->image.fill(la->fill);
+	la->rect.setRect(0, 0, width(), height() );	// initial size
+//	fprintf(stderr, " New image %d x %d\n", la->image.width(), la->image.height());
+rw_lock->unlock();
+return true;
+}
+
+bool QwtPlotWaterfall::reconfigLayer(qint32 l, qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval,  QImage::Format fm, QColor fil, qreal opacity )
+{
+QwtWfLayer_t *la = NULL;
+rw_lock->lockForWrite();
+if(l >= 0 && l < layers.count())
+                la = layers.takeAt(l);  
+if(!la) {
+	rw_lock->unlock();
+	return false;
+	}
+
+	la->image = QImage(width_, height_, fm);
+	la->format = fm;
+	la->opacity = opacity;
+	la->range = QwtInterval(minval, maxval);
+	la->minx  = minx;
+	la->miny  = miny;
+	la->maxx  = maxx;
+	la->maxy  = maxy;
+	la->image.fill(fil);
+	la->fill = fil;
+	la->rect.setRect(0, 0, width(), height() );	// initial size
+rw_lock->unlock();
+return true;
+}
+
+bool QwtPlotWaterfall::reconfigLayer(qint32 l, qint32 width_, qint32 height_, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range_,  QImage::Format fm, QColor fil, qreal opacity )
+{
+QwtWfLayer_t *la = NULL;
+rw_lock->lockForWrite();
+if(l >= 0 && l < layers.count())
+                la = layers.takeAt(l);  
+if(!la) {
+	rw_lock->unlock();
+	return false;
+	}
+	la->image = QImage(width_, height_, fm);
+	la->format = fm;
+	la->opacity = opacity;
+	la->range = range_;
+	la->colorMap = colorMap;
+	la->minx  = minx;
+	la->miny  = miny;
+	la->maxx  = maxx;
+	la->maxy  = maxy;
+	la->image.fill(fil);
+	la->fill = fil;
+	la->rect.setRect(0, 0, width(), height() );	// initial size
+rw_lock->unlock();
+return true;
+}
+
+
+
 
 void QwtPlotWaterfall::attachAxis(qint32 l,  qint32 axid, QwtPlot *p){
 if(l < layers.count())
@@ -205,6 +288,13 @@ void QwtPlotWaterfall::unlockForRead(){
 	rw_lock->unlock();
 	}
 
+void QwtPlotWaterfall::lockForWrite(){
+	rw_lock->lockForWrite();
+	}
+	
+void QwtPlotWaterfall::unlockForWrite(){
+	rw_lock->unlock();
+	}
 
 void QwtWfLayer_t::plotscaleDivChanged()
 {
@@ -234,6 +324,9 @@ if(p && p->is_orig_set()) {
 //	scy = 1;
 	scx = mxx.sDist() / p->orig_xrange;
 	scy = myy.sDist() / p->orig_yrange;
+	
+//	printf("%d --- newforx %f %f %f %f   %f %f\n", p->id, mxx.p1(), mxx.p2(), mxx.s1(), mxx.s2(), mxx.pDist(), mxx.sDist());
+//	printf("%d --- newfory %f %f %f %f   %f %f\n", p->id, myy.p1(), myy.p2(), myy.s1(), myy.s2(), myy.pDist(), myy.sDist());
 
 	if(plot_x != NULL) {
 		mx = plot_x->canvasMap(x_id);
@@ -295,6 +388,7 @@ if(p && p->is_orig_set()) {
 //	my = p->plott->canvasMap(p->native_yaxid);
 	QRectF f = QwtScaleMap::transform (mxx, myy, ff);
 
+//	printf("----------------\n");
 //	printf("		%d plotscaleDivChanged %.4f %.4f    MINMAX: %.4f %.4f %.4f %.4f FSC: %.4f %.4f\n", id, scx, scy, minx, miny, maxx, maxy, foreign_scx, foreign_scy);
 //	printf("		WxH: %.4f %.4f XY: %.4f %.4f  Rect: %.4f %.4f   %.4f x %.4f\n", w, h, x, y, f.left(), f.top(), f.width(), f.height());
 
@@ -390,6 +484,21 @@ bool QwtPlotWaterfall::eventFilter( QObject *object, QEvent *e )
 	#endif
 
 return QWidget::eventFilter( object, e );
+}
+
+void QwtPlotWaterfall::reconfig()
+{
+//	fprintf(stderr, "resize from %d %d to %d %d\n", width(), height(), plott->canvas()->width(), plott->canvas()->height());
+	resize(plott->canvas()->width(), plott->canvas()->height());
+	QwtScaleMap mx, my, mxx, myy;
+
+	reattachAxis(false);
+	mx = plott->canvasMap(native_xaxid);
+	my = plott->canvasMap(native_yaxid);
+	orig_w = mx.pDist();
+	orig_h = my.pDist();
+	orig_xrange = mx.sDist();
+	orig_yrange = my.sDist();
 }
 
 
@@ -490,7 +599,7 @@ for ( QList<QwtWfLayer_t*>::iterator it = layers.begin(); it != layers.end(); ++
 //	my = plott->canvasMap(native_yaxid);
 	QRectF f = QwtScaleMap::transform (mxx, myy, ff);
 
-//	printf("		%d plotscaleDivChanged %f %f    MINMAX: %f %f %f %f FSC: %f %f\n", id, scx, scy, minx, miny, maxx, maxy, foreign_scx, foreign_scy);
+//	printf("		%d plotscaleDivChanged %f %f    MINMAX: %f %f %f %f FSC: %f %f\n", id, scx, scy, la->minx, la->miny, la->maxx, la->maxy, foreign_scx, foreign_scy);
 //	printf("		%d Resize              %.4f %.4f    MINMAX: %.4f %.4f %.4f %.4f FSC: %.4f %.4f\n", la->id, scx, scy, la->minx, la->miny, la->maxx, la->maxy, foreign_scx, foreign_scy);
 //	printf("		WxH: %.4f %.4f XY: %.4f %.4f  Rect: %.4f %.4f   %.4f x %.4f\n", w, h, x, y, f.left(), f.top(), f.width(), f.height());
 
@@ -627,11 +736,12 @@ void QwtPlotWaterfall::appendT(qint32 l, double *data, int w, int h)
 {
 QwtWfLayer_t *la;
 int	y = 0;
-
+//fprintf(stderr, "\n----------> QwtPlotWaterfall::appendT called %d %d\n", l, layers.count());
 rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
 //	if(la->w >= w && la->h >= h) {
+//	fprintf(stderr, "QwtPlotWaterfall::appendT: %d %d vs %d %d\n", la->image.width(), la->image.height(), w, h);
 	if(la->image.width() >= w && la->image.height() >= h) {
 	uchar *data_ = la->image.bits();
 	memmove(data_ + la->image.bytesPerLine() * h, data_, la->image.sizeInBytes() - la->image.bytesPerLine() * h);
@@ -652,11 +762,12 @@ void QwtPlotWaterfall::appendT(qint32 l, QRgb *data, int w, int h)
 {
 QwtWfLayer_t *la;
 int	y = 0;
-
+//fprintf(stderr, "\n----------> QwtPlotWaterfall::appendT called\n");
 rw_lock->lockForRead();
 if(l < layers.count())  {
 	la = layers[l];
 //	if(la->w >= w && la->h >= h) {
+//	fprintf(stderr, "QwtPlotWaterfall::appendT: %d %d vs %d %d\n", la->image.width(), la->image.height(), w, h);
 	if(la->image.width() >= w && la->image.height() >= h) {
 	uchar *data_ = la->image.bits();
 	memmove(data_ + la->image.bytesPerLine() * h, data_, la->image.sizeInBytes() - la->image.bytesPerLine() * h);

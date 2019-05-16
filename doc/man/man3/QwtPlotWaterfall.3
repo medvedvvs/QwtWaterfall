@@ -1,4 +1,4 @@
-.TH "QwtPlotWaterfall" 3 "Tue Apr 23 2019" "QwtWaterfall" \" -*- nroff -*-
+.TH "QwtPlotWaterfall" 3 "Thu May 16 2019" "QwtWaterfall" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -40,6 +40,22 @@ Inherits QWidget\&.
 .RI "void \fBdeleteLayer\fP (qint32 l)"
 .br
 .RI "\fIDelete a layer\&. \fP"
+.ti -1c
+.RI "bool \fBreconfigLayer\fP (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval)"
+.br
+.RI "\fIReconfig a layer\&. \fP"
+.ti -1c
+.RI "bool \fBreconfigLayer\fP (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity)"
+.br
+.RI "\fIReconfig a layer\&. \fP"
+.ti -1c
+.RI "bool \fBreconfigLayer\fP (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity)"
+.br
+.RI "\fIReconfig a layer\&. \fP"
+.ti -1c
+.RI "void \fBreconfig\fP ()"
+.br
+.RI "\fIReconfig a waterfall plot internals\&. \fP"
 .ti -1c
 .RI "void \fBdetatchAxis\fP (qint32 l, bool X, bool Y)"
 .br
@@ -85,38 +101,89 @@ Inherits QWidget\&.
 .br
 .RI "\fIAttach axis\&. \fP"
 .ti -1c
+.RI "void \fBreattachAxis\fP (bool lock)"
+.br
+.ti -1c
 .RI "virtual bool \fBeventFilter\fP (QObject *, QEvent *)"
 .br
 .ti -1c
 .RI "void \fBUpdate\fP ()"
 .br
+.RI "\fIUpdate graph\&. \fP"
 .ti -1c
 .RI "bool \fBis_orig_set\fP ()"
 .br
 .ti -1c
-.RI "qint32 \fBget_orig_w\fP ()"
+.RI "qreal \fBget_orig_w\fP ()"
 .br
 .ti -1c
-.RI "qint32 \fBget_orig_h\fP ()"
+.RI "qreal \fBget_orig_h\fP ()"
 .br
 .ti -1c
 .RI "void \fBlockForRead\fP ()"
 .br
+.RI "\fILock wf plot for read operations\&. \fP"
 .ti -1c
 .RI "void \fBunlockForRead\fP ()"
 .br
+.RI "\fIUnlock wf plot for read operations\&. \fP"
+.ti -1c
+.RI "void \fBlockForWrite\fP ()"
+.br
+.RI "\fILock wf plot for direct layers write/reconfig operations\&. \fP"
+.ti -1c
+.RI "void \fBunlockForWrite\fP ()"
+.br
+.RI "\fILock wf plot for direct layers write/reconfig operations\&. \fP"
 .in -1c
 .SS "Public Attributes"
 
 .in +1c
 .ti -1c
+.RI "int \fBid\fP"
+.br
+.ti -1c
+.RI "int \fBcurrent_layer\fP"
+.br
+.ti -1c
 .RI "QwtColorMap * \fBcolorMap\fP"
 .br
 .RI "\fIData color map\&. \fP"
 .ti -1c
+.RI "QwtColorMap * \fBcolorMap_\fP"
+.br
+.ti -1c
 .RI "QList< \fBQwtWfLayer_t\fP * > \fBlayers\fP"
 .br
 .RI "\fI(Q)List of layers \fP"
+.ti -1c
+.RI "qreal \fBorig_w\fP"
+.br
+.ti -1c
+.RI "qreal \fBorig_h\fP"
+.br
+.ti -1c
+.RI "qreal \fBorig_xrange\fP"
+.br
+.ti -1c
+.RI "qreal \fBorig_yrange\fP"
+.br
+.ti -1c
+.RI "qint32 \fBnative_xaxid\fP"
+.br
+.ti -1c
+.RI "qint32 \fBnative_yaxid\fP"
+.br
+.ti -1c
+.RI "QwtPlot * \fBplott\fP"
+.br
+.in -1c
+.SS "Protected Slots"
+
+.in +1c
+.ti -1c
+.RI "void \fBplotscaleDivChanged\fP ()"
+.br
 .in -1c
 .SS "Protected Member Functions"
 
@@ -126,13 +193,6 @@ Inherits QWidget\&.
 .br
 .ti -1c
 .RI "void \fBresizeEvent\fP (QResizeEvent *event)"
-.br
-.in -1c
-.SS "Protected Attributes"
-
-.in +1c
-.ti -1c
-.RI "QwtPlot * \fBplott\fP"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -390,6 +450,119 @@ Detatch layer from an axis\&.
 .RE
 .PP
 
+.SS "void QwtPlotWaterfall::lockForRead ()"
+
+.PP
+Lock wf plot for read operations\&. 
+.PP
+\fBNote:\fP
+.RS 4
+Used in pair with \fBunlockForRead()\fP 
+.PP
+Not required for \fBreconfigLayer()\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBunlockForRead\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::lockForWrite ()"
+
+.PP
+Lock wf plot for direct layers write/reconfig operations\&. 
+.PP
+\fBNote:\fP
+.RS 4
+Not required for \fBreconfigLayer()\fP
+.PP
+Used in pair with \fBunlockForWrite()\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBunlockForWrite\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::reconfig ()"
+
+.PP
+Reconfig a waterfall plot internals\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaddLayer\fP \fBreconfigLayer\fP 
+.RE
+.PP
+
+.SS "bool QwtPlotWaterfall::reconfigLayer (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval)"
+
+.PP
+Reconfig a layer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIid\fP Layer index 
+.br
+\fIwidth\fP Layer width 
+.br
+\fIheight\fP Layer height 
+.br
+\fIminx\fP Layer minimum x-scale value 
+.br
+\fIminy\fP Layer minimum y-scale value 
+.br
+\fImaxx\fP Layer maximum x-scale value 
+.br
+\fImaxy\fP Layer maximum y-scale value 
+.br
+\fIminval\fP Layer minimum (z-scale) value 
+.br
+\fImaxval\fP Layer maximum (z-scale) value
+.RE
+.PP
+.PP
+.nf
+// example of reconfig procedure in a Plot with WF widget:
+setAxisScale( QwtPlot::xBottom, minx, maxx );   // set new scale interval in WF widget section in a plot
+setAxisScale( QwtPlot::yLeft, miny, maxy );
+updateAxes();   // required
+zoomer->setZoomBase();  // if zoomer is used in a Plot
+WF->reconfigLayer(0, width, height, minx, miny, maxx, maxy, minval, maxval);    // update layer 0 values
+WF->reconfig(); // update WF widget itself
+.fi
+.PP
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaddLayer\fP 
+.RE
+.PP
+
+.SS "bool QwtPlotWaterfall::reconfigLayer (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, qreal minval, qreal maxval, QImage::Format fm, QColor fil, qreal opacity)"
+
+.PP
+Reconfig a layer\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaddLayer\fP \fBreconfigLayer\fP 
+.RE
+.PP
+
+.SS "bool QwtPlotWaterfall::reconfigLayer (qint32 id, qint32 width, qint32 height, qreal minx, qreal miny, qreal maxx, qreal maxy, QwtInterval range, QImage::Format fm, QColor fil, qreal opacity)"
+
+.PP
+Reconfig a layer\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaddLayer\fP \fBreconfigLayer\fP 
+.RE
+.PP
+
 .SS "void QwtPlotWaterfall::setColorMap (qint32 l, QwtColorMap * m)"
 
 .PP
@@ -400,6 +573,49 @@ Set the color map for the layer\&. Color map is used to map values inside the 2D
 \fIl\fP Layer index\&. Must be in range [0\&.\&.layers\&.count()-1] 
 .br
 \fIm\fP QwtColorMap 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::unlockForRead ()"
+
+.PP
+Unlock wf plot for read operations\&. 
+.PP
+\fBNote:\fP
+.RS 4
+Used in pair with \fBlockForRead()\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBlockForRead\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::unlockForWrite ()"
+
+.PP
+Lock wf plot for direct layers write/reconfig operations\&. 
+.PP
+\fBNote:\fP
+.RS 4
+Used in pair with \fBlockForWrite()\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBlockForWrite\fP 
+.RE
+.PP
+
+.SS "void QwtPlotWaterfall::Update ()"
+
+.PP
+Update graph\&. 
+.PP
+\fBNote:\fP
+.RS 4
+Use it in a timer of the parent QwtPlot 
 .RE
 .PP
 
